@@ -1,0 +1,3 @@
+[submodule "third_party/aha-3d"]
+	path = third_party/aha-3d
+	url = https://github.com/KevinXu02/aha-3d.git

@@ -218,3 +218,17 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project-local configuration and credentials
+.env.*
+!.env.example
+*.local.yaml
+
+# Local data, model weights, and generated results
+/data/local/
+/outputs/
+/checkpoints/
+
+# Blender backups
+*.blend1
+*.blend2
