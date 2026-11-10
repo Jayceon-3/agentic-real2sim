@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "scene": "office48-baseline-001",
+  "inputs": {"video": "../../data/local/office48/source.mp4"},
+  "reuse": "reuse_allowed",
+  "appearance": "materials",
+  "delivery": "video",
+  "camera": "source_trajectory",
+  "people": "none",
+  "cabinets": "none",
+  "objects": "none",
+  "timing": {"mode": "explicit", "fps": "30", "frames": 303, "start": 1},
+  "variants": {"models": false, "materials": false},
+  "interactive_demo": false,
+  "fidelity": {"mode": "major_objects"},
+  "details": {
+    "appearance": "Match visible room structure, major furniture and materials; whitebox is intermediate.",
+    "camera": "Reuse locked source-derived reference cameras, not supplied authored example cameras. PCHIP translation, SLERP rotation, linear intrinsics; no extrapolation. Reuse only geometry estimates and source inputs; author a new room from empty."
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "scene": "office48-baseline-001",
+  "task": "office48-baseline-001",
+  "kind": "reconstruction",
+  "reference_reconstruction": true,
+  "source_video": "../../data/local/office48/source.mp4",
+  "human_motion": false,
+  "render": "video",
+  "timing": {"fps": "30", "frames": 303, "start": 1},
+  "required_artifacts": ["scene", "render"],
+  "subjects": [
+    "architecture/floor", "architecture/walls", "architecture/ceiling",
+    "architecture/ceiling_beams", "architecture/windows", "architecture/door",
+    "furniture/desk", "furniture/chairs", "furniture/shelf",
+    "lighting/chandelier", "relationship/desk-chairs-windows"
+  ],
+  "repair_budget": 3,
+  "appearance": "Source-matched materials following intermediate whitebox review",
+  "camera_scope": "Source camera animation from 32 estimated native keys; interpolation recorded",
+  "authoring_scope": "New room from empty; source people excluded; existing whitebox used only in prior installation test",
+  "experiment_spec": "../../configs/office48_static_baseline_v1.json",
+  "input_lock": "../../experiments/office48-baseline-001/inputs.lock.json"
+}

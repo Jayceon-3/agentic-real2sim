@@ -7,6 +7,11 @@ baseline or automatically replace furniture in an accepted scene.
 | Location | Purpose | Runtime |
 | --- | --- | --- |
 | [sam3d_objects/infer.py](sam3d_objects/infer.py) | Single-image/mask generation, provenance and profiling | Dedicated SAM 3D Objects GPU environment; validation only needs NumPy/Pillow |
+| [sam3d_objects/env.sh](sam3d_objects/env.sh) | Source to restore the Great Lakes interactive environment | Bash and existing Anaconda/CUDA modules |
+| [sam3d_objects/run.sh](sam3d_objects/run.sh) | Prepare, segment, record human review, generate and bundle one object case | Existing Pi3X/SAM3/SAM 3D runtimes |
+| [sam3d_objects/setup.sh](sam3d_objects/setup.sh), [paths.sh](sam3d_objects/paths.sh) | Check/configure installed runtime paths | No model load or GPU allocation |
+| [sam3d_objects/gpu.sh](sam3d_objects/gpu.sh) | Allocate and enter an interactive A40 session | Slurm |
+| [slurm/sam3d_workflow.sbatch](slurm/sam3d_workflow.sbatch) | Run a single workflow GPU stage independently of SSH | Slurm |
 | [slurm/sam3d_objects.sbatch](slurm/sam3d_objects.sbatch) | Great Lakes batch execution, independent of SSH | Slurm, course account, A40 |
 | [tests/](tests/) | CPU checks for the new wrapper and batch launcher | Python, NumPy, Pillow; no model weights |
 | Existing `*office48*.py` files below | Historical Office48 baseline authoring and review | See table |
@@ -37,6 +42,8 @@ The historical invocation details live in
 
 See [the run guide](sam3d_objects/README.md) for validation, direct execution,
 Slurm submission, output schemas and performance boundaries.
+For the complete staged video/mask/GLB route with human review, use the
+[Great Lakes workflow guide](sam3d_objects/WORKFLOW.md).
 
 ```bash
 python3 -m unittest discover -s scripts/tests -v

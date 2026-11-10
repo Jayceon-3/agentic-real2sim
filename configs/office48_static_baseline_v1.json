@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "kind": "project_experiment_spec_not_upstream_recipe",
+  "experiment_id": "office48-baseline-001",
+  "baseline": "pinned AHa-3D static reconstruction with agent authoring and verification",
+  "prompt": "prompts/office48_static_baseline_v1.md",
+  "input_lock": "experiments/office48-baseline-001/inputs.lock.json",
+  "workspace": "outputs/office48-baseline-001",
+  "source": "data/local/office48/source.mp4",
+  "reference": {
+    "geometry": "outputs/office48-reference/mesh/layers.npz",
+    "geometry_manifest": "outputs/office48-reference/mesh/manifest.json",
+    "cameras": "outputs/office48-reference/alignment/cameras.json",
+    "inputs": "outputs/office48-reference/pi3x/inputs.npz",
+    "input_manifest": "outputs/office48-reference/pi3x/inputs.json",
+    "build_report": "outputs/office48-review/reference_build.json",
+    "alignment_report": "outputs/office48-review/alignment/alignment.json",
+    "source_view_manifest": "outputs/office48-review/source_views/reference_views.json"
+  },
+  "scope": {
+    "people": "excluded",
+    "architecture_and_furniture": "static",
+    "camera": "source-derived animation; record interpolation between 32 estimated cameras",
+    "appearance": "source-matched materials after whitebox review",
+    "authoring": "new scene from empty; no reuse of supplied authored office",
+    "new_reconstruction_models_or_selection_policies": false
+  },
+  "timing": {
+    "source_frames": 303,
+    "fps": 30,
+    "duration_seconds": 10.1,
+    "last_frame_timestamp_seconds": 10.066666666666666,
+    "blender_start": 1,
+    "blender_end": 303,
+    "mapping": "blender_frame = source_frame + 1",
+    "final_size_wh": [1280, 720],
+    "comparison_source_frames": [0, 78, 146, 224, 302]
+  },
+  "completion": [
+    "editable newly authored scene.blend",
+    "full-length render with complete decode and timing checks",
+    "five matched source RGB/render comparisons",
+    "layout and placement checks with actual visual review",
+    "repair and manual-intervention ledger with unresolved findings",
+    "runtime and available cost records; unavailable values explicitly unknown"
+  ]
+}

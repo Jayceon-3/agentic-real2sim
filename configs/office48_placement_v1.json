@@ -1,0 +1,27 @@
+{
+  "frame": 1,
+  "physics": "off",
+  "objects": {
+    "architecture/baseboards": {"role": "structure", "fixed": true},
+    "architecture/door-double": {"role": "structure", "fixed": true},
+    "architecture/window-back": {"role": "structure", "fixed": true},
+    "architecture/window-left-near": {"role": "structure", "fixed": true},
+    "architecture/window-left-far": {"role": "structure", "fixed": true},
+    "architecture/ridge-beam": {"role": "structure", "fixed": true},
+    "architecture/timber-frame-1": {"role": "structure", "fixed": true},
+    "architecture/timber-frame-2": {"role": "structure", "fixed": true},
+    "furniture/rug": {"role": "cover"},
+    "lighting/chandelier": {"role": "fixture", "fixed": true, "support": "architecture/ridge-beam"},
+    "decor/wall-clock": {"role": "fixture", "fixed": true, "support": "architecture/wall-back"},
+    "decor/calendar": {"role": "fixture", "fixed": true, "support": "architecture/wall-left"},
+    "furniture/entry-wall-cabinet": {"role": "fixture", "fixed": true, "support": "architecture/entry-return"},
+    "decor/folio-0": {"role": "prop", "support": "furniture/desk"},
+    "decor/folio-1": {"role": "prop", "support": "furniture/desk"},
+    "decor/paper": {"role": "prop", "support": "furniture/desk"},
+    "decor/water-bottle": {"role": "prop", "support": "furniture/desk"},
+    "decor/shelf-binder-0": {"role": "prop", "support": "furniture/shelf"},
+    "decor/shelf-binder-1": {"role": "prop", "support": "furniture/shelf"},
+    "decor/shelf-binder-2": {"role": "prop", "support": "furniture/shelf"},
+    "decor/shelf-binder-3": {"role": "prop", "support": "furniture/shelf"}
+  }
+}

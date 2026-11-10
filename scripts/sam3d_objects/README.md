@@ -1,5 +1,10 @@
 # SAM 3D Objects wrapper
 
+For video extraction, SAM3 candidates, explicit human mask selection, optional Pi3X
+reference building, GPU allocation and result packaging, start with the
+[staged Great Lakes workflow](WORKFLOW.md). This page documents the lower-level
+single-request inference wrapper, which remains usable independently.
+
 This wraps the inference route exercised in the Great Lakes official-input smoke
 test: upstream commit `f91db411c50efee93d8db7aeb323885650f6f722`, Python 3.11,
 Torch 2.5.1+cu121, one A40, cluster CUDA module `cuda/12.1.1`, and locally built
@@ -42,11 +47,26 @@ store, never CLI flags, input metadata or logs.
 
 ## First run: repeat the official example with the wrapper
 
+For an interactive Great Lakes Bash session, restore the installed environment
+from the project root with:
+
+```bash
+source scripts/sam3d_objects/env.sh
+```
+
+This activates the existing Conda environment, loads cluster CUDA after activation,
+sets cache paths and exports `SAM3D_PROJECT_ROOT`, `SAM3D_SRC` and `MODEL_CONFIG`.
+Its runtime storage is `~/eecs442_scratch/real2sim/sam3d-objects`, resolved to a
+physical path. It does not install dependencies, allocate a GPU or change directory.
+Use `source`, not `bash`, so the settings remain in your current shell. Request a
+GPU allocation before actual inference. Input and new output paths are still set
+per experiment. The Slurm launcher already handles activation independently.
+
 After syncing this project to Great Lakes, in its checkout:
 
 ```bash
 export SAM3D_PROJECT_ROOT="$PWD"
-export SAM3D_WORK="$(cd ~/eecs442_scratch/sam3d-objects && pwd -P)"
+export SAM3D_WORK="$(cd ~/eecs442_scratch/real2sim/sam3d-objects && pwd -P)"
 export SAM3D_SRC="$SAM3D_WORK/src/sam-3d-objects"
 export EXAMPLE_INPUT="$SAM3D_SRC/notebook/images/shutterstock_stylish_kidsroom_1640806567"
 export MODEL_CONFIG="$SAM3D_WORK/checkpoints/hf-download/checkpoints/pipeline.yaml"

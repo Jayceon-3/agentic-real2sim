@@ -223,6 +223,7 @@ __marimo__/
 .env.*
 !.env.example
 *.local.yaml
+/configs/sam3d_objects.local.sh
 
 # Local data, model weights, and generated results
 /data/local/

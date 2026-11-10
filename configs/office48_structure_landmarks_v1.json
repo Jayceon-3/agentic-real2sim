@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "pixel_grid": "672x378 processed RGB; integer-index pixel centers",
+  "landmarks": [
+    {"id": "back_window_top_left", "source_frame": 78, "pixel_xy": [272, 233], "plane_axis": 1, "plane_coordinate": 4.24},
+    {"id": "back_window_top_right", "source_frame": 78, "pixel_xy": [414, 234], "plane_axis": 1, "plane_coordinate": 4.24},
+    {"id": "back_window_top_left_crossview", "source_frame": 146, "pixel_xy": [366, 212], "plane_axis": 1, "plane_coordinate": 4.24},
+    {"id": "back_window_top_right_crossview", "source_frame": 146, "pixel_xy": [534, 207], "plane_axis": 1, "plane_coordinate": 4.24},
+    {"id": "door_far_top", "source_frame": 0, "pixel_xy": [306, 112], "plane_axis": 0, "plane_coordinate": 1.452},
+    {"id": "door_near_top", "source_frame": 0, "pixel_xy": [415, 87], "plane_axis": 0, "plane_coordinate": 1.452},
+    {"id": "door_near_bottom", "source_frame": 0, "pixel_xy": [399, 350], "plane_axis": 0, "plane_coordinate": 1.452},
+    {"id": "left_window_near_top_start", "source_frame": 146, "pixel_xy": [75, 161], "plane_axis": 0, "plane_coordinate": -2.265},
+    {"id": "left_window_near_top_end", "source_frame": 146, "pixel_xy": [198, 189], "plane_axis": 0, "plane_coordinate": -2.265},
+    {"id": "left_window_far_top_start", "source_frame": 146, "pixel_xy": [245, 200], "plane_axis": 0, "plane_coordinate": -2.265},
+    {"id": "left_window_far_top_end", "source_frame": 146, "pixel_xy": [304, 211], "plane_axis": 0, "plane_coordinate": -2.265},
+    {"id": "left_window_near_sill", "source_frame": 224, "pixel_xy": [99, 192], "plane_axis": 0, "plane_coordinate": -2.265}
+  ],
+  "limitations": [
+    "Manual source boundary selections by agent; no ground-truth dimensions",
+    "Ray/plane intersections constrain visible frame edges; glazing depth is not measured",
+    "Rectangular openings approximate multi-view disagreement; compare renders before accepting"
+  ]
+}

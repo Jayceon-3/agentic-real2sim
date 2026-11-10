@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "measurement_report": "outputs/office48-baseline-001/evidence/measurements-v001/measurements.json",
+  "units": "uncalibrated predicted metres",
+  "bounds": {"left": -2.265, "right": 1.452, "back": 4.24, "front_completion": 0.25, "floor": 0.0},
+  "wall_thickness": 0.12,
+  "roof_fit_at_y": 3.1,
+  "timber_frame_y": [1.74, 3.45],
+  "windows": [
+    {"id": "architecture/window-back", "wall": "back", "span": [-1.29, 0.51], "bottom": 0.34, "top": 2.04, "columns": 2},
+    {"id": "architecture/window-left-near", "wall": "left", "span": [1.40, 2.29], "bottom": 0.38, "top": 2.04, "columns": 1},
+    {"id": "architecture/window-left-far", "wall": "left", "span": [3.02, 3.94], "bottom": 0.38, "top": 2.04, "columns": 1}
+  ],
+  "door": {"id": "architecture/door-double", "wall": "right", "span": [1.72, 3.74], "bottom": 0.03, "top": 2.04, "columns": 2},
+  "assumptions": [
+    "Rectangular orthogonal wall approximation fitted to source-derived planes",
+    "Window clear openings inset from source-linked outer trim endpoints",
+    "Window sill elevations regularized across partially occluded views",
+    "Entry-side front extent is an unobserved completion; no front closure wall",
+    "Timber section sizes and cross-tie height inferred from visible proportions",
+    "Exterior appearance is unmodeled; transmitted daylight is approximate"
+  ]
+}
