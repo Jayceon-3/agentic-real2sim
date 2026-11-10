@@ -1,51 +1,45 @@
-# Great Lakes：从视频到单物体 GLB
+# Great Lakes: From Video to a Single-Object GLB
 
-这套入口复用已经安装的 **Pi3X、SAM3 和 SAM 3D Objects 独立环境**，不重新安装或
-升级它们。每个 `CASE` 固定一个视频、源帧、物体和文字提示；模型阶段可重复运行，
-每次产生新的目录。人工检查 mask 与最终资产分别记录，成功退出不代表视觉验收。
+These entry points reuse the installed **separate Pi3X, SAM3 and SAM 3D Objects environments** without reinstalling or upgrading them. Each `CASE` fixes one video, source frame, object and text prompt. Model stages can be repeated, each in a new directory. Mask review and final asset review are recorded separately; a successful exit does not establish visual acceptance.
 
 ```text
-环境路径检查 → 准备源帧 → SAM3 候选 → [人工看图并选 mask]
-                                       ↓
-                           输入校验 → SAM 3D → GLB
-                                       ↓
-                             [人工 Blender 检查] → 打包
+Check runtime paths → Prepare source frame → SAM3 candidates → [Human mask review]
+                                                                      ↓
+                                               Validate inputs → SAM 3D → GLB
+                                                                      ↓
+                                                   [Human Blender review] → Bundle
 
-新房间可选：Pi3X + SAM3 + Open3D → 参考几何/相机（单独检查）
-已有 Office48 参考直接复用，不需要为了生成一个家具重新推理。
+Optional for a new room: Pi3X + SAM3 + Open3D → reference geometry/cameras → review
+Reuse the existing Office48 reference when generating an individual furniture asset.
 ```
 
-## 0. 同步代码和配置路径
+## 0. Sync Code and Configure Paths
 
-在 Great Lakes 现有 `agentic-real2sim` 仓库中操作。先同步新增代码。
-默认运行目录为 `~/eecs442_scratch/real2sim/sam3d-objects`。若旧环境放在其他位置：
+Work in the existing `agentic-real2sim` checkout on Great Lakes and sync the new code first. The default runtime directory is `~/eecs442_scratch/real2sim/sam3d-objects`. If installed environments use other locations:
 
 ```bash
 cp configs/sam3d_objects.example.sh configs/sam3d_objects.local.sh
-# 编辑 local.sh 中的 SAM3_PY、SAM3_RUNTIME、PI3X_PY 等实际路径。
+# Edit local.sh with the actual SAM3_PY, SAM3_RUNTIME, PI3X_PY and other paths.
 ```
 
-`local.sh` 已忽略提交，不放 token。每个新终端执行：
+`local.sh` is gitignored. Never store tokens in it. In each new terminal:
 
 ```bash
 source scripts/sam3d_objects/paths.sh
 bash scripts/sam3d_objects/setup.sh
 ```
 
-这是文件路径检查，不加载模型、不需要 GPU。首次迁移到新机器仍需按官方文档安装
-环境和授权权重；该脚本不会伪造 runtime.json 或自动修补依赖。
-额外检查新房间所需 Pi3X/Open3D 环境：
+This checks file paths without loading models or allocating a GPU. Moving to a new machine still requires installation and authorized weights according to the official documentation. The script does not fabricate runtime.json or automatically patch dependencies. To also check Pi3X/Open3D dependencies for a new room:
 
 ```bash
 bash scripts/sam3d_objects/setup.sh --reference
 ```
 
-模型依赖曾遇到的修复仍由现有安装提供：Kaolin 0.17.0 本地编译，CUDA 使用集群
-12.1.1，推理入口在运行副本中修正 CUDA_HOME。不要重新安装预编译 Kaolin 来替换它。
+The existing installation retains the validated compatibility fixes: locally built Kaolin 0.17.0, cluster CUDA 12.1.1 and a run-local correction of the inference entry point's CUDA_HOME assignment. Preserve the working Kaolin build instead of replacing it with a precompiled wheel.
 
-## 1. CPU：准备一个 case
+## 1. CPU: Prepare a Case
 
-使用新目录；不要指向之前已经存在的手工实验目录。
+Choose a new directory rather than a directory from an existing manual experiment.
 
 ```bash
 export CASE="$SAM3D_PROJECT_ROOT/outputs/sam3d-cases/office48-cabinet-f000-v001"
@@ -59,94 +53,82 @@ bash scripts/sam3d_objects/run.sh prepare \
   --bbox-relative 0.80 0.10 0.99 0.64
 ```
 
-如果已有 `reference_build.json`，可额外传入 `--reference-build /absolute/reference_build.json`。
-它记录路径与哈希，不重新计算参考，也不代替参考视觉审核。
+If a `reference_build.json` already exists, optionally add `--reference-build /absolute/reference_build.json`. This records its path and hash without recomputation or visual acceptance.
 
-- `--frame` 是零基原视频帧号，不是 Blender 帧号。
-- `--label` 就是输入 SAM3 的文字 prompt。
-- `--bbox-relative` 为左、上、右、下，范围 0–1；它会按原图尺寸转换。
-- 也可用 `--bbox LEFT TOP RIGHT BOTTOM` 指定原图像素，不能同时使用两种框。
-- 上述 Office48 框是已经用过的粗定位，不是任意柜体通用框。
+- `--frame` is the zero-based native video frame, not the Blender frame.
+- `--label` is the text prompt supplied to SAM3.
+- `--bbox-relative` specifies left, top, right and bottom in the range 0–1, scaled to the native image dimensions.
+- Alternatively, use `--bbox LEFT TOP RIGHT BOTTOM` for native pixel coordinates. The two forms are mutually exclusive.
+- The Office48 box above is the previously used rough selection, not a universal cabinet box.
 
-准备阶段调用 **Pi3X 环境的 Python + 已有解码工具**抽取原图，不加载 Pi3X 模型。
-`source/` 保存原图、视频哈希、帧号、解码器报告时间和尺寸；`sam3-request.json` 保存提示。
-换源帧、文字或选择框时建立新 case，不手动修改这些已绑定的文件。
-该步骤不需要 GPU，但视频解码应在允许的计算资源中运行，避免在登录节点做长视频重活。
+Preparation uses **the Pi3X environment's Python and the existing decoding tool** to extract RGB; it does not load the Pi3X model. `source/` retains the image, video hash, frame ID, decoder-reported timestamp and dimensions. `sam3-request.json` retains the prompt. Create a new case when changing the frame, prompt or selection box instead of editing bound inputs. No GPU is needed, but perform substantial video decoding on permitted compute resources rather than login nodes.
 
-## 2. GPU：选择交互式或 batch，两者选一
+## 2. GPU: Choose Interactive or Batch Execution
 
-### 交互式
+### Interactive
 
-登录节点执行下列命令，默认申请两小时 A40，并自动进入计算节点：
+On the login node, request a two-hour A40 allocation and automatically enter the compute node:
 
 ```bash
 bash scripts/sam3d_objects/gpu.sh
 ```
 
-可以覆盖时长：`bash scripts/sam3d_objects/gpu.sh --time=01:00:00`。
-已在 Slurm allocation 中时脚本会拒绝再次申请。计算节点的新 shell 中：
+Override the duration with `bash scripts/sam3d_objects/gpu.sh --time=01:00:00`. The script rejects nested Slurm allocations. In the new compute-node shell:
 
 ```bash
-cd /你的实际路径/agentic-real2sim
+cd /your/actual/path/agentic-real2sim
 source scripts/sam3d_objects/paths.sh
 export CASE="$SAM3D_PROJECT_ROOT/outputs/sam3d-cases/office48-cabinet-f000-v001"
 ```
 
-若做直接底层 `infer.py` 调用，可 `source scripts/sam3d_objects/env.sh`。
-下面的 `run.sh generate` 会自动激活环境，其他阶段则用各自的 Python。
+For direct low-level `infer.py` calls, use `source scripts/sam3d_objects/env.sh`. The `run.sh generate` command below activates that environment automatically; other stages use their own Python executables.
 
-### Batch（避免 SSH 断线停止任务，推荐）
+### Batch: Recommended for Jobs That Must Survive SSH Disconnection
 
-在登录节点先 source `paths.sh` 并设置绝对路径 `CASE`，直接提交阶段：
+On the login node, source `paths.sh`, set an absolute `CASE` path and submit a stage:
 
 ```bash
 sbatch scripts/slurm/sam3d_workflow.sbatch segment --case "$CASE"
 ```
 
-不需要事先运行 `gpu.sh` 或 `salloc`。审核后用同一个入口提交 `generate`。
-每个作业独立申请一张 A40，默认两小时，不自动把人工审核前后两阶段连起来。
-同一 case 禁止并发写入；仍应自己控制同一 allocation 只运行一个 GPU 任务。
-更改 account、partition 或时限时，Slurm 参数放在脚本文件名之前。
+No prior `gpu.sh` or `salloc` is needed. After review, submit `generate` through the same entry point. Each job independently requests one A40 for two hours by default. Stages are not automatically connected across human review. Concurrent writers to the same case are rejected; also run only one GPU task in each allocation. Put Slurm account, partition or time overrides before the script filename.
 
-## 3. SAM3 分割，停下来审核
+## 3. SAM3 Segmentation and Human Review
 
-在交互式 GPU 节点：
+On an interactive GPU node:
 
 ```bash
 bash scripts/sam3d_objects/run.sh segment --case "$CASE"
 bash scripts/sam3d_objects/run.sh status --case "$CASE"
 ```
 
-日志和候选保存在：
+Candidates and logs are saved under:
 
 ```text
-CASE/stages/segment-日期-随机后缀/
+CASE/stages/segment-TIMESTAMP-SUFFIX/
   console.log
   segmentation_receipt.json
   results/manifest.json
   results/office48-wall-cabinet/text_0_overlay.jpg
   results/office48-wall-cabinet/text_0_cutout.png
   results/office48-wall-cabinet/text_0_mask.png
-  ...其他候选
+  ...other candidates
 ```
 
-这里分别执行文字提示和框提示，自动推荐只是建议。检查完整源图、overlay、cutout 和
-黑白 mask，确保选中完整可见物体，排除背景，没有大面积漏选。不要按 score 直接宣布通过。
+Text and box prompts produce separate candidate sets; the automatic recommendation is only a suggestion. Inspect the full source image, overlays, cutouts and binary masks. Confirm the entire visible target is selected, background is excluded and no major regions are missing. Do not accept a mask solely by its score.
 
-可把当前候选打成小包下载，无须整个 case 都复制：
+Bundle the current candidates for download:
 
 ```bash
 bash scripts/sam3d_objects/run.sh bundle --case "$CASE" --kind review \
   --out "$SAM3D_PROJECT_ROOT/outputs/office48-cabinet-mask-review-001.tar.gz"
 ```
 
-用本地终端 `scp dingxuan@greatlakes.arc-ts.umich.edu:/远端实际路径/该包.tar.gz outputs/`，
-再 `tar -xzf outputs/该包.tar.gz -C outputs/`。远端原 case 保留，不移动它。
-在本地看图期间无需一直占用交互式 GPU；之后可单独提交生成作业。
+From a local terminal, use `scp dingxuan@greatlakes.arc-ts.umich.edu:/actual/remote/path/review.tar.gz outputs/`, then `tar -xzf outputs/review.tar.gz -C outputs/`. Keep the original remote case in place. Release an interactive GPU while reviewing locally if it is no longer needed; generation can be submitted separately afterward.
 
-## 4. CPU：登记实际选中的候选
+## 4. CPU: Record the Selected Candidate
 
-只有实际看过后才执行；下面记录了这次选择 `text_0` 的示例：
+Run only after inspecting the actual images. This example records selection of `text_0`:
 
 ```bash
 bash scripts/sam3d_objects/run.sh review-mask --case "$CASE" \
@@ -154,38 +136,35 @@ bash scripts/sam3d_objects/run.sh review-mask --case "$CASE" \
   --note "Inspected overlay and cutout: complete visible cabinet, background excluded."
 ```
 
-每次审核产生独立的 `review-mask-*` 目录，包含 `mask.png`、来源元数据 `source.json`、
-以及带哈希的 `review.json`。它不会改写 SAM3 的原始候选。默认审核最新分割；若要审核
-更早一轮，加 `--segmentation "$CASE/stages/具体segment目录"`。
+Each review creates a separate `review-mask-*` directory containing `mask.png`, source metadata in `source.json` and a hash-bound `review.json`. Original SAM3 candidates are unchanged. The latest segmentation is reviewed by default; to select an earlier round, add `--segmentation "$CASE/stages/specific-segment-directory"`.
 
-没有审核记录、源图变化、候选被修改或已选 mask 变化时，生成会拒绝继续。
-这些是输入一致性检查，不是自动视觉质量评分。
+Generation refuses missing review records, changed source images, modified candidate artifacts or changed selected masks. These are input-consistency checks, not automatic visual quality scores.
 
-## 5. 校验输入，再生成 GLB
+## 5. Validate Inputs and Generate the GLB
 
-只校验，不加载权重：
+Validate without loading weights:
 
 ```bash
 bash scripts/sam3d_objects/run.sh generate --case "$CASE" --validate-only
 ```
 
-检查 validation 输出的 overlay 后，交互式 GPU 中运行：
+After inspecting the validation overlay, run on an interactive GPU node:
 
 ```bash
 bash scripts/sam3d_objects/run.sh generate --case "$CASE" --seed 42 --save-splat
 ```
 
-或在登录节点提交 batch：
+Or submit from the login node:
 
 ```bash
 sbatch scripts/slurm/sam3d_workflow.sbatch generate \
   --case "$CASE" --seed 42 --save-splat
 ```
 
-无需手填 output 时间戳。每次生成有独立目录、日志及之前 wrapper 的完整报告：
+Output timestamps are assigned automatically. Each generation has its own directory, logs and complete inference-wrapper report:
 
 ```text
-CASE/stages/generate-日期-随机后缀/
+CASE/stages/generate-TIMESTAMP-SUFFIX/
   console.log
   command.json
   stage.json
@@ -195,14 +174,11 @@ CASE/stages/generate-日期-随机后缀/
   results/inputs/...
 ```
 
-重复性能实验可以在同一 reviewed case 多次运行 generate，固定 seed 和导出选项。
-每次仍重新启动模型；这里没有模型常驻 worker，也没有自动把同一次结果当作新推理。
-`stage.json.wall_seconds` 是该控制阶段的观测耗时，`results/report.json` 是推理 wrapper
-的分阶段耗时，两者测量边界不同，Slurm 排队时间均不包含在其中。
+For repeated performance experiments, run generate multiple times on the same reviewed case with fixed seed and export settings. Every call starts the model afresh; no persistent worker or result-cache substitution is implemented. `stage.json.wall_seconds` measures the control stage, while `results/report.json` measures inference-wrapper phases. Their boundaries differ, and both exclude Slurm queue time.
 
-## 6. Blender 审核与保存结果
+## 6. Blender Review and Result Preservation
 
-下载 GLB，先在空 Blender 场景检查正面、侧面、背面、材质、保存重开，再记录：
+Download the GLB. Inspect its front, sides, back and materials in an empty Blender scene, save and reopen it, then record your observations:
 
 ```bash
 bash scripts/sam3d_objects/run.sh review-result --case "$CASE" \
@@ -210,48 +186,41 @@ bash scripts/sam3d_objects/run.sh review-result --case "$CASE" \
   --note "Inspected geometry/materials and reopened the saved Blender scene."
 ```
 
-如果实际不合格，使用 `--verdict reject` 并记录原因。该记录只针对生成的单资产，
-不代表尺度对齐、物体接触、场景重建已通过。截图或 Blender 保存文件可另放本地实验目录。
+Use `--verdict reject` and describe the problems for an unsuitable asset. The review covers only the generated asset, not scale alignment, object contact or scene reconstruction acceptance. Keep screenshots or saved Blender files in the local experiment directory as additional evidence.
 
-打包最新生成、对应的审核 mask、输入、配置和日志：
+Bundle the latest generation, matching reviewed mask, inputs, configuration and logs:
 
 ```bash
 bash scripts/sam3d_objects/run.sh bundle --case "$CASE" --kind result \
   --out "$SAM3D_PROJECT_ROOT/outputs/office48-cabinet-result-001.tar.gz"
 ```
 
-输出包必须在 case 外，且不能覆盖已有包。包用于备份与审核，内部记录仍保留原始远端
-绝对路径，不宣称解压后能直接在另一台机器恢复执行。下载到本地 ignored `outputs/`。
-大资产不提交 Git，小型实验总结、代码和协议才入 Git。
+Bundle paths must be outside the case and cannot overwrite an existing archive. Bundles support backup and review; records retain original remote absolute paths and are not claimed to resume directly on another machine after extraction. Download to the local gitignored `outputs/` directory. Commit code, protocols and small experiment summaries, not large generated assets.
 
-## 可选：确实需要新 Pi3X 房间参考时
+## Optional: Generate a New Pi3X Room Reference
 
-已有 Office48 参考无需执行本节。新视频的 GPU 节点可以运行：
+Skip this section when reusing the Office48 reference. For a new video, on a GPU node:
 
 ```bash
 bash scripts/sam3d_objects/run.sh reference --case "$CASE" --num-frames 32
 ```
 
-或提交：
+Or submit:
 
 ```bash
 sbatch scripts/slurm/sam3d_workflow.sbatch reference --case "$CASE" --num-frames 32
 ```
 
-这调用既有 `build_reference`，包含 Pi3X、SAM3 语义分割及 Open3D。它生成近似几何、
-相机和源视角叠加图，不生成最终可编辑房间，也不提供独立物体的审核 mask。
-参考与单物体分割是两个任务，不会互相替代。查看结果后再决定坐标/尺度对齐方案。
+This calls the existing `build_reference` route with Pi3X, SAM3 semantic segmentation and Open3D. It produces approximate geometry, cameras and source-view overlays, not a final editable room or a reviewed object-instance mask. Room references and individual-object segmentation serve different purposes. Inspect the reference before deciding how to align coordinates and scale.
 
-## 失败、断线与重试
+## Failures, Disconnections and Retries
 
-- 查看状态：`bash scripts/sam3d_objects/run.sh status --case "$CASE"`。
-- Python/子进程失败保留 `stage.json`、`error.txt`、已有 console.log，不选择失败输出。
-- 同阶段重试产生新目录；不用删旧失败记录。准备阶段失败则换新 case。
-- Slurm 强制超时/OOM 可能留下 `running` 状态。先查 `squeue`/`sacct` 确认旧进程结束，
-  再重试。内核文件锁随进程释放，不需要手删锁文件。
-- `sbatch` 成功返回只证明提交成功；检查作业 ExitCode、case 状态和模型报告。
-- 新 shell 重新 source `paths.sh` 并设置 CASE，不依赖上个 shell 的变量。
-- 推理入口仍是 `infer.py`；原先独立运行脚本与 `sam3d_objects.sbatch` 继续保留。
+- Inspect state with `bash scripts/sam3d_objects/run.sh status --case "$CASE"`.
+- Python/subprocess failures retain `stage.json`, `error.txt` and any console.log. Failed outputs are not selected.
+- Retrying a stage creates a new directory and preserves prior failures. Use a new case after failed preparation.
+- Slurm timeout/OOM termination may leave a `running` record. Check `squeue`/`sacct` to confirm the old process has ended before retrying. Kernel locks are released when processes exit; do not manually delete lock files.
+- Successful `sbatch` return means submission only. Check job ExitCode, case state and model reports.
+- In a new shell, source `paths.sh` and set CASE again rather than relying on the previous shell's variables.
+- `infer.py` remains the inference entry point; the earlier standalone commands and `sam3d_objects.sbatch` are still available.
 
-本地测试不使用真实视频解码或 GPU 模型；正式新流程仍需要在 Great Lakes 完成一次
-端到端运行验证。已有手工结果可以保留为历史证据，无需为了“补流程”重跑它。
+Local tests use stand-in decoders and models rather than real video decoding or GPU inference. The new staged workflow still needs an end-to-end Great Lakes validation run. Preserve existing manual results as historical evidence without rerunning them solely to populate the workflow.

@@ -1,4 +1,4 @@
-# Agentic Real2Sim
+Agentic Real2Sim
 
 EECS 442 course project: verification-guided tool selection for indoor reconstruction.
 
@@ -50,7 +50,7 @@ instructions for each experiment.
 
 ```text
 configs/         Experiment configurations
-scripts/         Project setup and experiment scripts (to be implemented)
+scripts/         Office48 baseline scripts, SAM 3D Objects wrapper and Slurm launcher
 prompts/         Versioned agent instructions
 experiments/     Small run records and observations
 data/            Data acquisition and provenance instructions
@@ -58,6 +58,12 @@ third_party/aha-3d/  Upstream baseline pinned as a Git submodule
 ```
 
 ## Experiment records
+
+The experimental SAM 3D Objects adapter is documented in the
+[run guide](scripts/sam3d_objects/README.md). It supports one image/mask request,
+native GLB export, provenance and phase timing, with a Great Lakes batch launcher.
+See the [script map](scripts/README.md) for the existing Office48 entry points.
+This route is separate from the pinned AHa-3D static baseline.
 
 For each run, record the project and AHa-3D commits, input video checksum and
 frame/time mapping, agent model and prompt, environment and GPU, runtime and
