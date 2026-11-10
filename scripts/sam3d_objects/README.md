@@ -16,8 +16,12 @@ recorded machine; the cluster CUDA toolkit passed a minimal compilation test.
 ## Inputs
 
 - `--image`: source RGB image. The original bytes are retained; inference uses RGB.
-- `--mask`: same-size, single-channel mask. Foreground is `value > --mask-threshold`
-  (default 0, compatible with 0/1 or 0/255 masks). RGB overlays are rejected.
+- `--mask`: same-size mask. Foreground is `value > --mask-threshold`
+  (default 0, compatible with 0/1 or 0/255 masks). `--mask-channel auto` accepts
+  grayscale and identical RGB channels (with opaque alpha if RGBA). Ambiguous
+  colored images are rejected. Use `--mask-channel alpha` for an explicit alpha
+  mask, or `--mask-channel last` to reproduce the official loader's last-channel
+  behavior for multi-channel masks. Check `inputs/overlay.png` for actual identity.
   No crop, resizing, EXIF rotation, inpainting or automatic instance selection occurs.
 - `--checkpoint`: a `pipeline.yaml` file or directory containing it, with its model
   files in the downloaded layout. This is not a single `.safetensors` path.
@@ -54,7 +58,7 @@ a new directory for the subsequent GPU run; validation directories are immutable
 ```bash
 "$SAM3D_WORK/envs/sam3d-objects/bin/python" scripts/sam3d_objects/infer.py \
   --upstream "$SAM3D_SRC" --checkpoint "$MODEL_CONFIG" \
-  --image "$EXAMPLE_INPUT/image.png" --mask "$EXAMPLE_INPUT/14.png" \
+  --image "$EXAMPLE_INPUT/image.png" --mask "$EXAMPLE_INPUT/14.png" --mask-channel last \
   --object-id official-toy --seed 42 \
   --out "$SAM3D_PROJECT_ROOT/outputs/sam3d-objects/official-validate-001" \
   --validate-only
@@ -71,7 +75,7 @@ inherited by the batch job via the normal `sbatch` environment export.
 ```bash
 sbatch scripts/slurm/sam3d_objects.sbatch \
   --checkpoint "$MODEL_CONFIG" \
-  --image "$EXAMPLE_INPUT/image.png" --mask "$EXAMPLE_INPUT/14.png" \
+  --image "$EXAMPLE_INPUT/image.png" --mask "$EXAMPLE_INPUT/14.png" --mask-channel last \
   --object-id official-toy --seed 42 --save-splat \
   --checkpoint-revision "$(cat "$SAM3D_WORK/logs/checkpoint_revision.txt")" \
   --out "$SAM3D_PROJECT_ROOT/outputs/sam3d-objects/official-gpu-001"
@@ -106,7 +110,7 @@ unset NVCC_PREPEND_FLAGS NVCC_APPEND_FLAGS
 python -u scripts/sam3d_objects/infer.py \
   --upstream "$SAM3D_SRC" --cuda-home "$CUDA_HOME" \
   --checkpoint "$MODEL_CONFIG" \
-  --image "$EXAMPLE_INPUT/image.png" --mask "$EXAMPLE_INPUT/14.png" \
+  --image "$EXAMPLE_INPUT/image.png" --mask "$EXAMPLE_INPUT/14.png" --mask-channel last \
   --out "$SAM3D_PROJECT_ROOT/outputs/sam3d-objects/official-direct-001"
 ```
 

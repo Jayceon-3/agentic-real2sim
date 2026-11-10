@@ -118,10 +118,35 @@ class WrapperTests(unittest.TestCase):
                 self.assertEqual(report["stage"], "prepare_inputs")
                 self.assertTrue((output / "error.txt").is_file())
 
-    def test_reject_rgb_mask(self):
-        Image.new("RGB", (6, 4), "white").save(self.mask)
-        with self.assertRaisesRegex(ValueError, "single-channel"):
+    def test_reject_colored_overlay_in_auto_mode(self):
+        Image.new("RGB", (6, 4), (40, 220, 120)).save(self.mask)
+        with self.assertRaisesRegex(ValueError, "Ambiguous"):
             wrapper.run(wrapper.arguments(self.args + ["--validate-only"]))
+
+    def test_repeated_rgb_mask_keeps_foreground(self):
+        with Image.open(self.mask) as im:
+            im.convert("RGB").save(self.root / "rgb.png")
+        args = self.args[:]
+        args[args.index("--mask") + 1] = str(self.root / "rgb.png")
+        self.assertEqual(wrapper.run(wrapper.arguments(args)), 0)
+        receipt = json.loads((self.out / "inputs.json").read_text())
+        self.assertEqual(receipt["mask_pixels"], 6)
+        self.assertEqual(receipt["mask_selected_channel"], "repeated RGB grayscale")
+
+    def test_explicit_alpha_and_upstream_last_channel(self):
+        with Image.open(self.mask) as im:
+            alpha = np.array(im)
+        rgba = np.zeros((4, 6, 4), dtype="uint8")
+        rgba[..., :3] = [40, 220, 120]
+        rgba[..., 3] = alpha
+        Image.fromarray(rgba).save(self.mask)
+        for channel in ("alpha", "last"):
+            with self.subTest(channel=channel):
+                args = self.args[:]
+                args[args.index("--out") + 1] = str(self.root / channel)
+                self.assertEqual(wrapper.run(wrapper.arguments(args + ["--mask-channel", channel])), 0)
+                receipt = json.loads((self.root / channel / "inputs.json").read_text())
+                self.assertEqual(receipt["mask_pixels"], 6)
 
     def test_refuse_existing_output_without_touching_it(self):
         self.out.mkdir()

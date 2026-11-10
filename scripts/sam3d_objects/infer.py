@@ -46,13 +46,16 @@ def arguments(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--image", type=Path, required=True)
     p.add_argument("--mask", type=Path, required=True,
-                   help="Single-channel foreground mask; values > threshold are foreground")
+                   help="Foreground mask; values > threshold are foreground")
     p.add_argument("--checkpoint", type=Path, required=True,
                    help="pipeline.yaml or its containing directory, not a single weight file")
     p.add_argument("--upstream", type=Path, required=True, help="SAM 3D Objects source checkout")
     p.add_argument("--out", type=Path, required=True, help="New output directory; never overwritten")
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--mask-threshold", type=int, default=0)
+    p.add_argument("--mask-channel", choices=("auto", "alpha", "last"), default="auto",
+                   help="auto: grayscale or repeated RGB; alpha: explicit alpha channel; "
+                        "last: last channel, matching the upstream mask loader")
     p.add_argument("--cuda-home", type=Path,
                    help="Validated toolkit root; otherwise use existing CUDA_HOME")
     p.add_argument("--checkpoint-revision", help="User-supplied HF revision, recorded as a claim")
@@ -83,9 +86,30 @@ def prepare_inputs(args, out):
     with Image.open(out / identities["image"]["copy"]) as im:
         image = np.array(im.convert("RGB"))
     with Image.open(out / identities["mask"]["copy"]) as im:
-        mask_array = np.array(im)
+        mask_mode = im.mode
+        mask_array = np.array(im.convert("RGB") if im.mode == "P" else im)
+    if args.mask_channel == "alpha":
+        if mask_mode not in ("LA", "RGBA"):
+            raise ValueError("--mask-channel alpha requires an LA or RGBA image")
+        mask_array = mask_array[..., -1]
+        selected_channel = "alpha"
+    elif args.mask_channel == "last":
+        mask_array = mask_array[..., -1] if mask_array.ndim == 3 else mask_array
+        selected_channel = "last (upstream convention)"
+    elif mask_array.ndim == 2:
+        selected_channel = "grayscale"
+    elif (mask_array.ndim == 3 and mask_array.shape[-1] in (3, 4)
+          and np.array_equal(mask_array[..., 0], mask_array[..., 1])
+          and np.array_equal(mask_array[..., 0], mask_array[..., 2])
+          and (mask_array.shape[-1] == 3 or np.all(mask_array[..., 3] == 255))):
+        mask_array = mask_array[..., 0]
+        selected_channel = "repeated RGB grayscale"
+    else:
+        raise ValueError("Ambiguous multi-channel mask; do not pass a colored overlay. "
+                         "Choose --mask-channel alpha for alpha masks, or last to reproduce "
+                         "the upstream loader after reviewing the selected channel.")
     if mask_array.ndim != 2:
-        raise ValueError("Mask must be single-channel (L/1); do not pass an RGB overlay")
+        raise ValueError("Selected mask channel must be two-dimensional")
     if mask_array.shape != image.shape[:2]:
         raise ValueError(f"Image/mask dimensions differ: {image.shape[:2]} vs {mask_array.shape}")
     if not np.isfinite(mask_array).all() or mask_array.min() < 0 or mask_array.max() > 255:
@@ -101,6 +125,7 @@ def prepare_inputs(args, out):
     receipt = {"object_id": args.object_id, "files": identities,
                "width": image.shape[1], "height": image.shape[0],
                "mask_threshold": args.mask_threshold, "mask_pixels": int(mask.sum()),
+               "mask_source_mode": mask_mode, "mask_selected_channel": selected_channel,
                "mask_fraction": float(mask.mean()), "visual_mask_review": "not_recorded",
                "normalized_files": {name: digest(target / name) for name in
                                     ("image_rgb.png", "mask_binary.png", "overlay.png")}}
