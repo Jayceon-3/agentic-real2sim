@@ -171,6 +171,61 @@ may remain `running`; use Slurm state/logs to identify interruption. No automati
 retry/resume, result caching or worker persistence is implemented in v1. Use a new
 output directory for every retry and retain the failed one.
 
+## Import an existing GLB into an AHa-3D scene
+
+`import_blender.py` can run independently or through `run.sh import-scene` (see
+[workflow instructions](WORKFLOW.md#import-a-generated-asset-into-an-existing-room)).
+It reuses AHa-3D's semantic grouping helpers and does not run SAM3/SAM 3D.
+Use an existing generated GLB and a saved room. Copy
+`configs/sam3d_placement.example.json` to an experiment-specific JSON and supply
+reviewed placement values. The example is identity placement, not a calibrated
+Office48 cabinet pose.
+
+```bash
+blender --background --python-exit-code 1 \
+  --python scripts/sam3d_objects/import_blender.py -- \
+  --scene /absolute/path/room.blend \
+  --glb /absolute/path/object.glb \
+  --placement /absolute/path/placement.json \
+  --object-id furniture/sam3d-cabinet-test \
+  --out /absolute/path/new-import-run
+```
+
+When launching Windows Blender from WSL, convert **all** file arguments and the
+script path with `wslpath -w`. Blender must be able to read the checkout and assets.
+
+Placement schema 1 explicitly maps the coordinates **after Blender's glTF
+import** into scene-world coordinates: `p_world = T @ R_XYZ @ S @ p_imported`.
+Translation is in metres, Euler angles in degrees and scale is three positive
+factors. Rotation/scaling pivot around the imported origin; no centering, floor
+snapping, dimension fitting or native `pose.json` application is performed.
+Scene unit scale must be 1. No canonical front direction is claimed automatically.
+The importer preserves internal hierarchy and material assignments. Only static
+mesh/empty GLBs are supported; animated/rigged imports are rejected.
+
+`--object-id` is the scene's stable `instance_id`, which may differ from the SAM3
+request ID. An existing ID is rejected unless `--replace` is explicit. Replacement
+requires an existing static target, rejects nested semantic roots and articulated,
+animated or constrained targets, and removes only that target hierarchy in the
+new scene. Its old transform is recorded, **not inherited**. A supplied
+`support_id` must identify another semantic root; otherwise replacement inherits
+the target's support ID. Do not use static replacement for objects with external
+driver/constraint references or independent controls.
+
+Every run requires a new output directory and leaves the source scene untouched:
+
+- `scene.blend`: new scene, reopened and checked for root transform, mesh hierarchy
+  and material assignments.
+- `semantics.json`: AHa-3D scene semantic inventory.
+- `import_report.json`: input hashes, placement, bounds, timing, output hash and
+  execution status; failures after initialization also write `error.txt`.
+
+Existing relative asset paths are made absolute before saving so moving the blend
+to the output directory does not break them. External dependencies are not packed;
+this is not a portable scene bundle. Reopen checks do not prove texture appearance,
+correct alignment, collision freedom or visual acceptance. Inspect source-camera
+views and run AHa-3D's placement diagnostics before accepting a scene.
+
 ## Local checks
 
 ```bash
@@ -180,3 +235,12 @@ bash -n scripts/slurm/sam3d_objects.sbatch
 
 The tests use a fake runtime for control flow and output checks. They do not
 validate real model quality, GPU performance, CUDA kernels or a live Slurm cluster.
+
+For actual Blender checks with a small synthetic GLB (nested hierarchy, materials,
+nonidentity placement, replacement, duplicate-ID rejection and source preservation):
+
+```bash
+blender --background --python-exit-code 1 \
+  --python scripts/tests/blender_sam3d_import_smoke.py -- \
+  --out /absolute/path/new-import-smoke
+```

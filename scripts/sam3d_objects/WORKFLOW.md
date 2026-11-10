@@ -197,6 +197,78 @@ bash scripts/sam3d_objects/run.sh bundle --case "$CASE" --kind result \
 
 Bundle paths must be outside the case and cannot overwrite an existing archive. Bundles support backup and review; records retain original remote absolute paths and are not claimed to resume directly on another machine after extraction. Download to the local gitignored `outputs/` directory. Commit code, protocols and small experiment summaries, not large generated assets.
 
+## Import a Generated Asset into an Existing Room
+
+The shared entry point is `bash scripts/sam3d_objects/run.sh COMMAND ...`, or
+`python3 scripts/sam3d_objects/workflow.py COMMAND ...`. Each invocation runs one
+stage. Human mask review and placement/asset inspection remain explicit steps;
+there is no unattended all-in-one command. The Shell wrapper activates the model
+environment for `generate`; direct Python invocation requires a configured runtime.
+`import-scene` uses Blender and does not activate SAM 3D or require a GPU allocation.
+
+For a full workflow case, import its latest successful generation:
+
+```bash
+bash scripts/sam3d_objects/run.sh import-scene \
+  --case "$CASE" \
+  --scene /absolute/path/room.blend \
+  --placement /absolute/path/placement.json \
+  --object-id furniture/sam3d-cabinet \
+  --blender /absolute/path/blender
+```
+
+The scene ID may differ from the segmentation ID. Use `--replace` only for an
+existing static semantic target. Placement follows the contract documented in
+[the import guide](README.md#import-an-existing-glb-into-an-aha-3d-scene).
+The source room is preserved. Each invocation creates a new `import-scene-*`
+stage containing copied GLB/placement inputs, command, logs, snapshots, an import
+receipt and `results/scene.blend`, `results/import_report.json`, and
+`results/semantics.json`. Inspect the scene separately; `review-result` still
+reviews only the generated asset, not room alignment.
+
+The controller accepts Linux paths. When the Blender executable ends in `.exe`,
+it converts file arguments using `wslpath -w` automatically. Choose Blender with
+`--blender`, an **exported** `BLENDER_BIN`, or an executable named `blender` on PATH.
+Do not preconvert the controller's arguments to Windows paths.
+
+### Existing GLB / local import-only case
+
+For existing manual results or a GLB downloaded from Great Lakes, use a separate
+new case with `--glb`; this does not claim model inference was run by the workflow:
+
+```bash
+python3 scripts/sam3d_objects/workflow.py import-scene \
+  --case outputs/sam3d-cases/cabinet-local-import \
+  --glb outputs/sam3d-objects/office48-cabinet-20261109-215313/object.glb \
+  --scene outputs/office48-baseline-001/blender/furnished-v006/room.blend \
+  --placement configs/sam3d_placement.example.json \
+  --object-id furniture/sam3d-cabinet-test \
+  --blender '/mnt/e/Blender Foundation/Blender 5.2/blender.exe'
+```
+
+The example uses identity placement only. Supply your experiment's placement JSON
+for actual alignment. The new case directory is created automatically; do not
+point it at an old manual experiment directory without `case.json`. Repeat the
+command with the same case and `--glb` to create another import revision.
+Import-only cases support `import-scene`, `status`, and `bundle --kind result`.
+They cannot resume segmentation or generation; prepare a separate full case for
+those stages. This route avoids rewriting historical remote absolute paths.
+The controller does not submit SSH commands or transfer files between machines.
+
+```bash
+python3 scripts/sam3d_objects/workflow.py status --case "$CASE"
+python3 scripts/sam3d_objects/workflow.py bundle --case "$CASE" --kind result \
+  --out /absolute/path/new-scene-result.tar.gz
+```
+
+Result bundles include the latest successful scene import when present, with
+hash checks on the scene, GLB, placement, semantics and report. A new successful
+model generation clears the current scene-import pointer; previous stages remain
+on disk. Failed imports retain their logs and do not replace the last successful
+selection. Editing a saved scene in place invalidates its bundle receipt; preserve
+manual revisions separately. Source scenes and external texture dependencies are
+not copied into the bundle, so it is not guaranteed to be portable/self-contained.
+
 ## Optional: Generate a New Pi3X Room Reference
 
 Skip this section when reusing the Office48 reference. For a new video, on a GPU node:

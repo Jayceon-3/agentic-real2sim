@@ -115,6 +115,81 @@ class WorkflowTests(unittest.TestCase):
         with self.assertRaises(FileExistsError):
             self.prepare()
 
+    def import_args(self):
+        scene, placement = self.root / 'room.blend', self.root / 'placement.json'
+        scene.write_bytes(b'scene fixture')
+        placement.write_text('{}')
+        return ['import-scene', '--case', self.case, '--scene', scene,
+                '--placement', placement, '--object-id', 'furniture/cabinet',
+                '--blender', sys.executable]
+
+    def fake_import(self, command, cwd, stage):
+        destination = Path(command[command.index('--out') + 1])
+        destination.mkdir()
+        (destination / 'scene.blend').write_bytes(b'imported scene fixture')
+        workflow.write(destination / 'semantics.json', {})
+        workflow.write(destination / 'import_report.json', {
+            'status': 'completed', 'reopen_verified': True, 'object_id': 'furniture/cabinet',
+            'inputs': {key: {'sha256': workflow.sha(command[command.index('--' + key) + 1])}
+                       for key in ('scene', 'glb', 'placement')},
+            'output': {'sha256': workflow.sha(destination / 'scene.blend')}})
+
+    def test_import_generation_bundle_and_invalidate_on_regeneration(self):
+        self.review()
+        with patch.object(workflow, 'process', side_effect=self.fake_generation):
+            self.call('generate', '--case', self.case)
+        with patch.object(workflow, 'process', side_effect=self.fake_import):
+            self.call(*self.import_args())
+        stage = self.case / self.state()['latest_scene_import']
+        receipt = workflow.read(stage / 'import_receipt.json')
+        self.assertEqual(receipt['generation'], self.state()['latest_generation'])
+        archive = self.root / 'scene.tar.gz'
+        self.call('bundle', '--case', self.case, '--kind', 'result', '--out', archive)
+        with tarfile.open(archive) as tar:
+            self.assertTrue(any(name.endswith('/results/scene.blend') for name in tar.getnames()))
+        with patch.object(workflow, 'process', side_effect=self.fake_generation):
+            self.call('generate', '--case', self.case)
+        self.assertNotIn('latest_scene_import', self.state())
+        self.assertTrue(stage.is_dir())
+
+    def test_external_glb_import_case_and_tampered_scene(self):
+        glb = self.root / 'external.glb'
+        glb.write_bytes(b'external GLB')
+        with patch.object(workflow, 'process', side_effect=self.fake_import):
+            self.call(*self.import_args(), '--glb', glb)
+        self.assertEqual(self.state()['mode'], 'import_only')
+        self.call('bundle', '--case', self.case, '--kind', 'result', '--out', self.root / 'external.tar.gz')
+        stage = self.case / self.state()['latest_scene_import']
+        (stage / 'results/scene.blend').write_bytes(b'changed')
+        with self.assertRaisesRegex(ValueError, 'artifact changed'):
+            self.call('bundle', '--case', self.case, '--kind', 'result', '--out', self.root / 'bad.tar.gz')
+        with self.assertRaisesRegex(ValueError, 'Import-only'):
+            self.call('generate', '--case', self.case)
+
+    def test_import_failure_not_selected_and_retry_preserved(self):
+        glb = self.root / 'external.glb'
+        glb.write_bytes(b'external GLB')
+        args = self.import_args() + ['--glb', glb]
+        with patch.object(workflow, 'process', side_effect=subprocess.CalledProcessError(1, ['blender'])):
+            with self.assertRaises(subprocess.CalledProcessError):
+                self.call(*args)
+        failed = self.state()['history'][-1]['path']
+        self.assertNotIn('latest_scene_import', self.state())
+        with patch.object(workflow, 'process', side_effect=self.fake_import):
+            self.call(*args)
+        self.assertNotEqual(failed, self.state()['latest_scene_import'])
+        self.assertTrue((self.case / failed / 'error.txt').is_file())
+
+    def test_changed_generation_rejected_before_blender(self):
+        self.review()
+        with patch.object(workflow, 'process', side_effect=self.fake_generation):
+            self.call('generate', '--case', self.case)
+        (self.case / self.state()['latest_generation'] / 'results/object.glb').write_bytes(b'changed')
+        with patch.object(workflow, 'process') as process:
+            with self.assertRaisesRegex(ValueError, 'GLB changed'):
+                self.call(*self.import_args())
+            process.assert_not_called()
+
     def test_no_generation_before_explicit_review(self):
         self.segment()
         with self.assertRaisesRegex(ValueError, "selected_review"):

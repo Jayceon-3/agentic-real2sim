@@ -322,8 +322,94 @@ def generate(case, args, rt):
         if not args.validate_only:
             case.state["generation_review_sha256"] = sha(review / "review.json")
             case.state.pop("latest_result_review", None)
+            case.state.pop("latest_scene_import", None)
+            case.state.pop("scene_import_receipt_sha256", None)
         print("Input validation complete." if args.validate_only else
               "GLB exported. Inspect it in Blender; generation is not visual acceptance.")
+
+
+def import_scene(case, args, rt):
+    if args.glb:
+        if case.state.get("mode") != "import_only":
+            raise ValueError("--glb requires a separate import-only case; omit it for generated cases")
+        glb = args.glb.expanduser().resolve()
+        generation = None
+    else:
+        generation = case.pointer("latest_generation")
+        if read(generation / "results/report.json").get("status") != "completed":
+            raise ValueError("Latest generation is not completed")
+        glb = generation / "results/object.glb"
+        if sha(glb) != read(generation / "results/artifacts.json")["object.glb"]["sha256"]:
+            raise ValueError("Generated GLB changed after export")
+    scene, placement = args.scene.expanduser().resolve(), args.placement.expanduser().resolve()
+    for path in (glb, scene, placement):
+        require_file(path)
+    executable = args.blender or os.environ.get("BLENDER_BIN") or "blender"
+    resolved = shutil.which(str(executable))
+    if not resolved:
+        raise FileNotFoundError("Blender executable missing; pass --blender or export BLENDER_BIN")
+    blender = Path(resolved).resolve()
+    # The controller runs on Linux/WSL; Windows Blender needs Windows file paths.
+    windows = blender.suffix.lower() == ".exe"
+    def blender_path(path):
+        if windows:
+            return subprocess.check_output(["wslpath", "-w", str(path)], text=True).strip()
+        return str(path)
+    with case.stage("import-scene") as stage:
+        inputs = stage / "inputs"
+        inputs.mkdir()
+        shutil.copyfile(glb, inputs / "object.glb")
+        shutil.copyfile(placement, inputs / "placement.json")
+        identities = {"scene": sha(scene), "glb": sha(inputs / "object.glb"),
+                      "placement": sha(inputs / "placement.json")}
+        if sha(glb) != identities["glb"] or sha(placement) != identities["placement"]:
+            raise ValueError("Import inputs changed while copying")
+        script = ROOT / "scripts/sam3d_objects/import_blender.py"
+        shutil.copyfile(script, stage / "runner_snapshot.py")
+        command = [blender, "--background", "--python-exit-code", "1",
+                   "--python", blender_path(script), "--",
+                   "--scene", blender_path(scene), "--glb", blender_path(inputs / "object.glb"),
+                   "--placement", blender_path(inputs / "placement.json"),
+                   "--object-id", args.object_id, "--out", blender_path(stage / "results")]
+        if args.replace:
+            command.append("--replace")
+        process(command, ROOT, stage)
+        report = read(stage / "results/import_report.json")
+        if report.get("status") != "completed" or report.get("reopen_verified") is not True:
+            raise ValueError("Blender import did not complete its reopen checks")
+        if report.get("object_id") != args.object_id:
+            raise ValueError("Blender report has a different object ID")
+        for key, expected in identities.items():
+            if report["inputs"][key]["sha256"] != expected:
+                raise ValueError("Blender report input differs: " + key)
+        if sha(scene) != identities["scene"]:
+            raise ValueError("Source scene changed during import")
+        if sha(stage / "results/scene.blend") != report["output"]["sha256"]:
+            raise ValueError("Saved Blender scene differs from its report")
+        files = {str(path.relative_to(stage)): sha(path) for path in
+                 (inputs / "object.glb", inputs / "placement.json", stage / "results/scene.blend",
+                  stage / "results/semantics.json", stage / "results/import_report.json")}
+        write(stage / "import_receipt.json", {
+            "generation": str(generation.relative_to(case.root)) if generation else None,
+            "source_glb": str(glb), "source_scene": str(scene), "inputs_sha256": identities,
+            "object_id": args.object_id, "files": files,
+            "visual_review": "not_recorded", "scope": "static asset import; alignment not accepted"})
+        case.state["latest_scene_import"] = str(stage.relative_to(case.root))
+        case.state["scene_import_receipt_sha256"] = sha(stage / "import_receipt.json")
+        print("Scene imported. Inspect placement and materials:", stage / "results/scene.blend")
+
+
+def checked_scene_import(case):
+    stage = case.pointer("latest_scene_import")
+    if sha(stage / "import_receipt.json") != case.state["scene_import_receipt_sha256"]:
+        raise ValueError("Scene import receipt changed")
+    receipt = read(stage / "import_receipt.json")
+    if receipt["generation"] != case.state.get("latest_generation"):
+        raise ValueError("Scene import belongs to a different generation")
+    for relative, expected in receipt["files"].items():
+        if sha(inside(stage / relative, stage)) != expected:
+            raise ValueError("Scene import artifact changed: " + relative)
+    return stage
 
 
 def reference(case, args, rt):
@@ -363,6 +449,11 @@ def review_result(case, args, rt):
 
 
 def bundle(case, args, rt):
+    if case.state.get("mode") == "import_only":
+        if args.kind != "result":
+            raise ValueError("Import-only cases only support result bundles")
+        selected = [case.root / "case.json", checked_scene_import(case)]
+        return write_bundle(case, args, selected)
     case.verify_image()
     selected = [case.root / "case.json", case.root / "source", case.root / "sam3-request.json"]
     selected += [case.root / record["path"] for record in case.state["history"]
@@ -381,6 +472,12 @@ def bundle(case, args, rt):
                 raise ValueError("Generated artifact changed: " + relative)
         if case.state.get("latest_result_review"):
             selected.append(case.pointer("latest_result_review"))
+        if case.state.get("latest_scene_import"):
+            selected.append(checked_scene_import(case))
+    write_bundle(case, args, selected)
+
+
+def write_bundle(case, args, selected):
     output = args.out.expanduser().resolve()
     if output.is_relative_to(case.root):
         raise ValueError("Bundle path must be outside the case to avoid recursive archives")
@@ -416,7 +513,7 @@ def parser():
     commands = p.add_subparsers(dest="command", required=True)
     d = commands.add_parser("doctor", help="Check configured existing runtime paths without models")
     d.add_argument("--reference", action="store_true", help="Also check full Pi3X/mesh dependencies")
-    for name in ("prepare", "segment", "review-mask", "generate", "reference", "review-result", "bundle", "status"):
+    for name in ("prepare", "segment", "review-mask", "generate", "reference", "review-result", "import-scene", "bundle", "status"):
         sub = commands.add_parser(name)
         sub.add_argument("--case", type=Path, required=True)
         if name == "prepare":
@@ -443,6 +540,13 @@ def parser():
             sub.add_argument("--seed", type=int, default=42)
             sub.add_argument("--save-splat", action="store_true")
             sub.add_argument("--validate-only", action="store_true")
+        elif name == "import-scene":
+            sub.add_argument("--scene", type=Path, required=True)
+            sub.add_argument("--placement", type=Path, required=True)
+            sub.add_argument("--object-id", required=True, help="Scene instance_id, not segmentation ID")
+            sub.add_argument("--blender", help="Executable path; defaults to BLENDER_BIN or PATH")
+            sub.add_argument("--replace", action="store_true")
+            sub.add_argument("--glb", type=Path, help="External GLB; creates/reuses a separate import-only case")
         elif name == "reference":
             sub.add_argument("--num-frames", type=int, choices=(32, 64), default=32)
         elif name == "bundle":
@@ -459,7 +563,14 @@ def main(argv=None):
     if args.command == "prepare":
         prepare(args, rt)
         return 0
-    case = Case(args.case)
+    if args.command == "import-scene" and args.glb and not args.case.expanduser().exists():
+        case = Case(args.case, create=True)
+        case.state.update(mode="import_only", status="initialized")
+        case.save()
+    else:
+        case = Case(args.case)
+    if case.state.get("mode") == "import_only" and args.command not in ("import-scene", "bundle", "status"):
+        raise ValueError("Import-only cases support import-scene, bundle and status; prepare a separate full case")
     if args.command == "status":
         print(json.dumps(case.state, indent=2))
         return 0
@@ -467,7 +578,8 @@ def main(argv=None):
         raise ValueError("Record a nonempty observation, not only an acceptance flag")
     with case.locked():
         {"segment": segment, "review-mask": review_mask, "generate": generate,
-         "reference": reference, "bundle": bundle, "review-result": review_result}[args.command](case, args, rt)
+         "reference": reference, "bundle": bundle, "review-result": review_result,
+         "import-scene": import_scene}[args.command](case, args, rt)
     return 0
 
 

@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "coordinate_space": "blender_imported_to_scene_world",
+  "translation_m": [0.0, 0.0, 0.0],
+  "rotation_euler_xyz_deg": [0.0, 0.0, 0.0],
+  "scale": [1.0, 1.0, 1.0],
+  "semantic_class": "furniture/storage",
+  "note": "Identity placement for import testing only; not a calibrated cabinet placement."
+}

@@ -7,6 +7,7 @@ baseline or automatically replace furniture in an accepted scene.
 | Location | Purpose | Runtime |
 | --- | --- | --- |
 | [sam3d_objects/infer.py](sam3d_objects/infer.py) | Single-image/mask generation, provenance and profiling | Dedicated SAM 3D Objects GPU environment; validation only needs NumPy/Pillow |
+| [sam3d_objects/import_blender.py](sam3d_objects/import_blender.py) | Import a generated static GLB into a saved room with explicit placement and AHa-3D semantics | Background Blender; no model inference |
 | [sam3d_objects/env.sh](sam3d_objects/env.sh) | Source to restore the Great Lakes interactive environment | Bash and existing Anaconda/CUDA modules |
 | [sam3d_objects/run.sh](sam3d_objects/run.sh) | Prepare, segment, record human review, generate and bundle one object case | Existing Pi3X/SAM3/SAM 3D runtimes |
 | [sam3d_objects/setup.sh](sam3d_objects/setup.sh), [paths.sh](sam3d_objects/paths.sh) | Check/configure installed runtime paths | No model load or GPU allocation |
