@@ -65,6 +65,7 @@ def arguments(argv=None):
     p.add_argument("--save-splat", action="store_true", help="Also export Gaussian PLY")
     p.add_argument("--validate-only", action="store_true",
                    help="Prepare inputs and provenance without importing Torch or loading weights")
+    p.add_argument("--events", action="store_true", help="Write timestamped stage boundaries to events.jsonl")
     return p.parse_args(argv)
 
 
@@ -191,6 +192,22 @@ def run(args):
     # Exclusive creation also prevents concurrent writers to a previous run.
     args.out.mkdir(parents=True, exist_ok=False)
     out = args.out
+    active_event = None
+
+    def event(stage, state, status=None):
+        nonlocal active_event
+        if not getattr(args, "events", False):
+            return
+        stamp = {"stage": stage, "event": state, "pid": os.getpid(),
+                 "unix_seconds": time.time(), "monotonic_seconds": time.monotonic(),
+                 "elapsed_seconds": time.perf_counter() - started}
+        if status is not None:
+            stamp["status"] = status
+        with (out / "events.jsonl").open("a") as stream:
+            stream.write(json.dumps(stamp) + "\n")
+        active_event = stage if state == "start" else None
+
+    event("preparation", "start")
     report = {"schema_version": 1, "status": "running", "stage": "preflight",
               "started_at": datetime.now(timezone.utc).isoformat(), "timings_seconds": {},
               "timing_scope": "wrapper entry through final artifacts; excludes scheduler queue, "
@@ -229,6 +246,7 @@ def run(args):
         report["stage"] = "prepare_inputs"
         image, mask = prepare_inputs(args, out)
         report["timings_seconds"]["preparation"] = time.perf_counter() - started
+        event("preparation", "end", "completed")
         if args.validate_only:
             report.update(status="validated_only", stage="done")
             return 0
@@ -236,12 +254,14 @@ def run(args):
         report["stage"] = "runtime_import"
         write_json(out / "report.json", report)
         stage_start = time.perf_counter()
+        event("runtime_import", "start")
         runtime = load_runtime(args, out)
         import torch
         if not torch.cuda.is_available():
             raise RuntimeError("CUDA unavailable; execute inside a GPU allocation")
         torch.cuda.synchronize()
         report["timings_seconds"]["runtime_import"] = time.perf_counter() - stage_start
+        event("runtime_import", "end", "completed")
         report["gpu"] = {"name": torch.cuda.get_device_name(0),
                          "torch": torch.__version__, "torch_cuda": torch.version.cuda,
                          "total_memory_bytes": torch.cuda.get_device_properties(0).total_memory}
@@ -254,11 +274,15 @@ def run(args):
             torch.cuda.synchronize()
             torch.cuda.reset_peak_memory_stats()
             t = time.perf_counter()
+            event(name, "start")
+            succeeded = False
             try:
                 value = action()
                 torch.cuda.synchronize()
+                succeeded = True
             finally:
                 report["timings_seconds"][name] = time.perf_counter() - t
+                event(name, "end", "completed" if succeeded else "failed")
                 report["memory"][name] = {
                     "peak_torch_allocated_bytes": torch.cuda.max_memory_allocated(),
                     "peak_torch_reserved_bytes": torch.cuda.max_memory_reserved()}
@@ -292,13 +316,17 @@ def run(args):
                     raise ValueError(f"Missing or empty artifact: {name}")
         measure("export", export)
         report["stage"] = "artifact_receipt"
+        event("artifact_receipt", "start")
         names = ["object.glb", "pose.json"] + (["splat.ply"] if args.save_splat else [])
         write_json(out / "artifacts.json", {name: {"bytes": (out / name).stat().st_size,
                                                   "sha256": digest(out / name)} for name in names})
         report.update(status="completed", stage="done")
+        event("artifact_receipt", "end", "completed")
         print(f"SAM3D_COMPLETED {out}", flush=True)
         return 0
     except BaseException as error:
+        if active_event is not None:
+            event(active_event, "end", "failed")
         report.update(status="failed", error_type=type(error).__name__, error=str(error))
         (out / "error.txt").write_text(traceback.format_exc())
         raise

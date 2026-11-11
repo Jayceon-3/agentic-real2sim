@@ -170,12 +170,33 @@ class WrapperTests(unittest.TestCase):
         artifacts = json.loads((self.out / "artifacts.json").read_text())
         self.assertEqual(artifacts["object.glb"]["sha256"], wrapper.digest(self.out / "object.glb"))
 
+    def test_stage_events_have_ordered_boundaries_and_clocks(self):
+        wrapper.run(wrapper.arguments(self.args + ["--events"]))
+        events = [json.loads(line) for line in (self.out / 'events.jsonl').read_text().splitlines()]
+        phases = ['preparation', 'runtime_import', 'model_init', 'inference', 'export', 'artifact_receipt']
+        self.assertEqual([(e['stage'], e['event']) for e in events],
+                         [(phase, action) for phase in phases for action in ('start', 'end')])
+        self.assertTrue(all(e['pid'] == os.getpid() for e in events))
+        self.assertTrue(all(e['unix_seconds'] > 0 for e in events))
+        self.assertEqual(sorted(e['monotonic_seconds'] for e in events), [e['monotonic_seconds'] for e in events])
+
+    def test_stage_events_mark_preparation_failure(self):
+        self.image.unlink()
+        with self.assertRaises(FileNotFoundError):
+            wrapper.run(wrapper.arguments(self.args + ['--events']))
+        events = [json.loads(line) for line in (self.out / 'events.jsonl').read_text().splitlines()]
+        self.assertEqual(events[-1]['stage'], 'preparation')
+        self.assertEqual(events[-1]['status'], 'failed')
+
     def test_model_failure_retains_stage_and_traceback(self):
         with patch.dict(os.environ, {"FAKE_FAIL": "1"}):
             with self.assertRaisesRegex(RuntimeError, "synthetic"):
-                wrapper.run(wrapper.arguments(self.args))
+                wrapper.run(wrapper.arguments(self.args + ['--events']))
         self.assertEqual(self.report()["status"], "failed")
         self.assertEqual(self.report()["stage"], "inference")
+        events = [json.loads(line) for line in (self.out / 'events.jsonl').read_text().splitlines()]
+        self.assertEqual(events[-1]['status'], 'failed')
+        self.assertEqual(events[-1]['stage'], 'inference')
         self.assertIn("inference", self.report()["timings_seconds"])
         self.assertIn("synthetic", (self.out / "error.txt").read_text())
         self.assertFalse((self.out / "artifacts.json").exists())
