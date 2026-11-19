@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "timestamp": "2026-11-04T22:39:58.217311-05:00",
+  "status": "preliminary_review_package_ready",
+  "user_request": "Defer source-fidelity fixes for now and first view a deliverable version",
+  "archive": "outputs/office48-baseline-001/pre-delivery-v002/office48_preliminary_review.zip",
+  "archive_sha256": "f5b7c4b612f7c7516ce2276efa7c6ec74d20023977b2842d91c735148d5acfc1",
+  "archive_bytes": 7386670,
+  "video": "outputs/office48-baseline-001/pre-delivery-v002/package/office48_preview.mp4",
+  "scene": "outputs/office48-baseline-001/pre-delivery-v002/package/office48_preview.blend",
+  "frames": 303,
+  "fps": 30,
+  "duration_seconds": 10.1,
+  "resolution": [
+    1280,
+    720
+  ],
+  "full_decode_pass": true,
+  "zip_crc_pass": true,
+  "render_seconds": 303.80542669999886,
+  "visual_review": "outputs/office48-baseline-001/pre-delivery-v002/visual_review.json",
+  "original_findings_remain_open": true,
+  "baseline_accepted": false,
+  "jobs_running": []
+}

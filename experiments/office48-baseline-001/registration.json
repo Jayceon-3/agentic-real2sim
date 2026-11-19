@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "experiment_id": "office48-baseline-001",
+  "timestamp": "2026-11-04T21:36:50.137802-05:00",
+  "owner": "codex-office48-20261104",
+  "scene": "office48-baseline-001",
+  "task": "office48-baseline-001",
+  "acceptance_status": "awaiting_review",
+  "accepted": false,
+  "candidate": null,
+  "claim_path": "third_party/aha-3d/tasks/office48-baseline-001/task.json",
+  "scope_path": "third_party/aha-3d/deliveries/office48-baseline-001/acceptance/office48-baseline-001/scope.json",
+  "scope_sha256": "14e686a604ef348b59bc635187a5f31ca1bcab8f24467ed40a4daf3cfd598931",
+  "portable_scope": "configs/office48_acceptance_scope_v1.json",
+  "portable_request": "configs/office48_scene_request_v1.json",
+  "intake_status": "ready_for_authoring",
+  "room_authored": false,
+  "reference_import_report": "outputs/office48-baseline-001/blender/reference-v001/import_report.json",
+  "reference_scene": "outputs/office48-baseline-001/blender/reference-v001/reference_setup.blend",
+  "reference_scene_sha256": "f713b30ac30f9b80d4c4a8b5e8f92baf328d705b53051723e750d290326242f3",
+  "blender_version": "5.2.1 LTS",
+  "camera_checks": {
+    "frames_checked": 303,
+    "maximum_c2w_element_error": 4.902082280655584e-07,
+    "maximum_K_element_error_px": 1.0798397972470184,
+    "pixel_aspect_policy": "fixed median fx/fy; keyed lens and shifts",
+    "pixel_aspect_xy": [
+      1.0,
+      1.001308798789978
+    ]
+  },
+  "files": [
+    {
+      "path": "configs/office48_acceptance_scope_v1.json",
+      "sha256": "c78c48d950a6a4a7853e5ca804a6abf70e5ef5ae13c2600c87a67f5bbea8d58b"
+    },
+    {
+      "path": "configs/office48_scene_request_v1.json",
+      "sha256": "fafe57bb83622379eabac3f5519c70962775f6ecc7bb2e93ca34f156ef2e3cc8"
+    },
+    {
+      "path": "scripts/prepare_office48_import.py",
+      "sha256": "493d800bcfbfed470ed6f8d335bc88c802110393d6e58dd946ff3faaf8a36922"
+    },
+    {
+      "path": "scripts/blender_import_office48.py",
+      "sha256": "ca83943b22826c71aa260cf6e491fd8711b4ee4236907030b3b9b229e9f5f4d1"
+    }
+  ]
+}

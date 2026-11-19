@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "experiment_id": "office48-baseline-001",
+  "created_at": "2026-11-04T21:20:43.998721-05:00",
+  "status": "prepared_not_authored",
+  "code": {
+    "project_head_before_protocol": "25380c79d60cefc38e1f647dca640fba58a76f4e",
+    "project_branch": "main",
+    "preexisting_changes": [
+      "README.md modified",
+      "EECS442_project_proposal.pdf untracked"
+    ],
+    "protocol_commit": null,
+    "aha3d_commit": "82f4b1110cfe4b55fff19df3b3790852ce07b171",
+    "aha3d_tracked_clean_at_capture": true
+  },
+  "agent": {
+    "interface": "Codex conversation",
+    "exact_model_id": null,
+    "reasoning_and_sampling_settings": null,
+    "prompt": "prompts/office48_static_baseline_v1.md",
+    "instruction_scope": "task supplement to inherited conversation and system/developer/repository instructions",
+    "prior_exposure_to_supplied_whitebox": true
+  },
+  "source": {
+    "url": "https://raw.githubusercontent.com/KevinXu02/aha-3d/main/references/office48/source.mp4",
+    "source_url_revision": "main (mutable; downloaded bytes fixed by SHA256)",
+    "path": "data/local/office48/source.mp4",
+    "sha256": "993af1f9c6a58d9df39a0d95309e4ed5fec489cce3d25a5d8c7b503827d0a724",
+    "frames": 303,
+    "fps": 30.0,
+    "size_wh": [
+      1280,
+      720
+    ],
+    "processing_size_wh": [
+      672,
+      378
+    ],
+    "inference_frame_indices": [
+      0,
+      10,
+      19,
+      29,
+      39,
+      49,
+      58,
+      68,
+      78,
+      88,
+      97,
+      107,
+      117,
+      127,
+      136,
+      146,
+      156,
+      166,
+      175,
+      185,
+      195,
+      205,
+      214,
+      224,
+      234,
+      244,
+      253,
+      263,
+      273,
+      283,
+      292,
+      302
+    ],
+    "inference_timestamps_seconds": [
+      0.0,
+      0.3333333333333333,
+      0.6333333333333333,
+      0.9666666666666667,
+      1.3,
+      1.6333333333333333,
+      1.9333333333333333,
+      2.2666666666666666,
+      2.6,
+      2.933333333333333,
+      3.2333333333333334,
+      3.5666666666666664,
+      3.9,
+      4.233333333333333,
+      4.533333333333333,
+      4.866666666666666,
+      5.2,
+      5.533333333333333,
+      5.833333333333333,
+      6.166666666666667,
+      6.5,
+      6.833333333333333,
+      7.133333333333333,
+      7.466666666666667,
+      7.8,
+      8.133333333333333,
+      8.433333333333334,
+      8.766666666666666,
+      9.1,
+      9.433333333333334,
+      9.733333333333333,
+      10.066666666666666
+    ],
+    "timestamp_source": "OpenCV decoder presentation timestamp, seconds; not inferred from selected-frame cadence",
+    "additional_conditions_used": []
+  },
+  "reference": {
+    "geometry_sha256": "10ff58db8f5fa77b8b1b264e4591850a6e3c3803b7dfce6d28a0aedb8c8cb149",
+    "camera_sha256": "1e7771b85ddaa9440a1ec100a84c71ea539377d2b33a1fb6bd0455adfde1fed7",
+    "world_transform": [
+      [
+        -0.2071125561338841,
+        -0.6176164281992268,
+        0.7587188785776443,
+        -0.1565423012471388
+      ],
+      [
+        -0.8458346842213821,
+        0.5027457589093178,
+        0.17835467155869267,
+        2.3289170495829743
+      ],
+      [
+        -0.4915974736213684,
+        -0.6048112511634827,
+        -0.6265263557434082,
+        1.5348046246169709
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "camera_convention": "camera-to-world OpenCV (right,down,forward); room world Z up",
+    "units": "predicted metres; uncalibrated",
+    "visual_acceptance": "pending",
+    "semantic_cached_frames": 32,
+    "historical_remote_paths": {
+      "bundle": "/gpfs/accounts/eecs442f26_class_root/eecs442f26_class/dingxuan/real2sim/agentic-real2sim/outputs/office48-gpu-check-65406875-20261104-202455/pi3x",
+      "geometry": "/gpfs/accounts/eecs442f26_class_root/eecs442f26_class/dingxuan/real2sim/agentic-real2sim/outputs/office48-reference-65406875-20261104-203853/mesh/layers.npz",
+      "cameras": "/gpfs/accounts/eecs442f26_class_root/eecs442f26_class/dingxuan/real2sim/agentic-real2sim/outputs/office48-reference-65406875-20261104-203853/alignment/cameras.json",
+      "semantic_cache": "/gpfs/accounts/eecs442f26_class_root/eecs442f26_class/dingxuan/real2sim/agentic-real2sim/outputs/office48-reference-65406875-20261104-203853/masks"
+    }
+  },
+  "files": [
+    {
+      "path": "data/local/office48/source.mp4",
+      "bytes": 2971839,
+      "sha256": "993af1f9c6a58d9df39a0d95309e4ed5fec489cce3d25a5d8c7b503827d0a724"
+    },
+    {
+      "path": "outputs/office48-reference/mesh/layers.npz",
+      "bytes": 257298437,
+      "sha256": "10ff58db8f5fa77b8b1b264e4591850a6e3c3803b7dfce6d28a0aedb8c8cb149"
+    },
+    {
+      "path": "outputs/office48-reference/mesh/manifest.json",
+      "bytes": 25982,
+      "sha256": "d83bfb1ccff82457681b7e74bd4e78ef9c210acd20459407e188b448cfe2e676"
+    },
+    {
+      "path": "outputs/office48-reference/alignment/cameras.json",
+      "bytes": 29468,
+      "sha256": "1e7771b85ddaa9440a1ec100a84c71ea539377d2b33a1fb6bd0455adfde1fed7"
+    },
+    {
+      "path": "outputs/office48-reference/pi3x/inputs.npz",
+      "bytes": 24386834,
+      "sha256": "6525d8b9262a5dd8c3439c0cb1a89c09781f9744f29aaee47b1c8d15e778ddd7"
+    },
+    {
+      "path": "outputs/office48-reference/pi3x/inputs.json",
+      "bytes": 1757,
+      "sha256": "bad6cc9df39a95309208d5b5fda1e6ab89b1fb2a3b7b000396d545f6ab481c19"
+    },
+    {
+      "path": "outputs/office48-review/reference_build.json",
+      "bytes": 5812,
+      "sha256": "f569b97306bd36c4fd204febca09a88e90a52ecddbaedde89125ea9622c7d12f"
+    },
+    {
+      "path": "outputs/office48-review/alignment/alignment.json",
+      "bytes": 42337,
+      "sha256": "5775dfc89baeeb4ed9e2c19c68a84a569ecfc70b55ad872b8b60443f1b3c7037"
+    },
+    {
+      "path": "outputs/office48-review/source_views/reference_views.json",
+      "bytes": 7892,
+      "sha256": "c2aebe329844ac27faf33ef7a6d36058fab1f67e7ef23b48072724fa3763df65"
+    },
+    {
+      "path": "outputs/office48-review/source_views/source_overlays.jpg",
+      "bytes": 1191540,
+      "sha256": "52c62cc9a71ca73715192fe1323ecd7eeeb124696e122b1bef2cde2781111f2a"
+    },
+    {
+      "path": "outputs/office48-review/office48_frame0152_test.png/office48_frame0152_test.png",
+      "bytes": 241110,
+      "sha256": "898b7327a17ccb96bc18edd780468d6c575429d2c96e723d999b057e7cd25ac6"
+    },
+    {
+      "path": "prompts/office48_static_baseline_v1.md",
+      "bytes": 4042,
+      "sha256": "19f08dae71bac2badfee029c6198e70b4aca48c65f392bac08b6a0c2a3177cc8"
+    },
+    {
+      "path": "configs/office48_static_baseline_v1.json",
+      "bytes": 2138,
+      "sha256": "fe81065b2027e1d04d1e9f87354d49aaea4ec8f3417ebe7cc8bac53c63b1ca62"
+    },
+    {
+      "path": "third_party/aha-3d/AGENTS.md",
+      "bytes": 4511,
+      "sha256": "3c5352d27d680606c298858141d1ed46aaa0cc1822c083605f7981ab94ce547a"
+    },
+    {
+      "path": "third_party/aha-3d/docs/SCENE_WORKFLOW.md",
+      "bytes": 41281,
+      "sha256": "63a6e7d1a88b79053341e577e2bbaa91928f9c47c351f59c49439d9abfc9e313"
+    },
+    {
+      "path": "third_party/aha-3d/docs/PI3X_GEOMETRY_REFERENCE.md",
+      "bytes": 15065,
+      "sha256": "29fd6061a66406beaf881334151b7382cdaa7b75195bf837db8301376ba84efa"
+    }
+  ],
+  "verification": {
+    "local_source_matches_cached_source_identity": true,
+    "mesh_matches_producer_hash": true,
+    "camera_matches_producer_hash": true,
+    "rgb_cache_matches_producer_hash": true,
+    "frame_time_and_world_basis_consistency": true,
+    "test_render_png_size_wh": [
+      640,
+      360
+    ],
+    "local_full_video_decode": "not performed during workspace preparation",
+    "upstream_acceptance": "not initialized; required before reconstruction",
+    "final_scene_acceptance": "not applicable; no new scene authored"
+  },
+  "costs": {
+    "agent_tokens": null,
+    "agent_cost": null,
+    "preparation_total_cost": null,
+    "new_authoring_seconds": null
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "experiment_id": "office48-baseline-001",
+  "stage": "partial_furnished_candidate_not_final_delivery",
+  "created_at": "2026-11-04T22:20:41.079058-05:00",
+  "scene": "outputs/office48-baseline-001/blender/furnished-v006/room.blend",
+  "input_lock": "experiments/office48-baseline-001/inputs.lock.json",
+  "input_lock_sha256": "930014fd11dbbfdf0355215a9eec340c8d799b0fc5b65dcf64077d2d529f4b82",
+  "all_initial_locked_files_match": true,
+  "upstream_commit": "82f4b1110cfe4b55fff19df3b3790852ce07b171",
+  "upstream_tracked_status_at_build_end": "M examples/office48/whitebox.blend",
+  "unconsumed_local_changes_preserved": [
+    "examples/office48/whitebox.blend"
+  ],
+  "authoring_used_supplied_office_geometry": false,
+  "snapshot": "outputs/office48-baseline-001/inputs/authoring-code-v001",
+  "files": [
+    {
+      "path": "scripts/build_office48_room.py",
+      "sha256": "f6701cab1e481a4c7dcd75ac85d1729b2be56fe5680f41e07c50748100728d1f"
+    },
+    {
+      "path": "scripts/measure_office48_room.py",
+      "sha256": "e11d333dfa5bb1e45b6aff74463c82c5198343a3500e7667a1d2586bb9e1b9cf"
+    },
+    {
+      "path": "scripts/office48_furniture_parts.py",
+      "sha256": "8284e7d0c76af6807f18435a53ea610bd8553a41e84e964fdaf045abb01a09ca"
+    },
+    {
+      "path": "scripts/furnish_office48_room.py",
+      "sha256": "e38e3c574a71f77257bcbb28dcb887a5b4ddd85ac83ac36b76a0ef0b3870c86b"
+    },
+    {
+      "path": "scripts/repair_office48_candidate.py",
+      "sha256": "44218a31d9db795ca4d5551ca56f96b845a173d565c7d2183329e7c560e6fbcf"
+    },
+    {
+      "path": "scripts/review_office48_room.py",
+      "sha256": "22d285548030d43b5db443a8b52886f2c0e5a256f7dbb47f257ec88a13264406"
+    },
+    {
+      "path": "scripts/make_office48_comparisons.py",
+      "sha256": "05cb6e6172cf4ebca395a9ca9ef05d1cd6e0ce9cb253ca7dde443cf9bc516e2b"
+    },
+    {
+      "path": "configs/office48_room_v001.json",
+      "sha256": "7d6c03a5ade08cd3cec3e1a2c69844a8aff697c2a5bcb1b923e12046cc404ad8"
+    },
+    {
+      "path": "configs/office48_room_v002.json",
+      "sha256": "6a60ada2cbbfc2ba35b457d269c1b606c02ded46718e5c4e52531c51d9b9c6ee"
+    },
+    {
+      "path": "configs/office48_structure_landmarks_v1.json",
+      "sha256": "8868bd7c06161a2a83bfb36342c7d8ab28c6665f732f459464148f96e085b63e"
+    },
+    {
+      "path": "configs/office48_placement_v1.json",
+      "sha256": "c11e6e2623bbb93afc11ac355d91a464980d3675e63abe66e55edb4bbd6b2567"
+    }
+  ],
+  "camera_cache": "outputs/office48-baseline-001/inputs/camera-v001/camera.npz",
+  "comparison_source_frames": [
+    0,
+    78,
+    146,
+    224,
+    302
+  ],
+  "placement_configuration": "configs/office48_placement_v1.json",
+  "placement_report": "outputs/office48-baseline-001/evidence/furnished-v006/placement/report.json",
+  "placement_scope": "Static BVH and sampled support checks; explicit structures/fixtures; rigid-body simulation off",
+  "appearance": "Initial materials, unmodeled exterior and simplified small props; further refinement required",
+  "final_video": null,
+  "selected_delivery": null
+}

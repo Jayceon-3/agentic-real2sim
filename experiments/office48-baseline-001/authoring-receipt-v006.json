@@ -1,0 +1,23 @@
+{
+  "status": "awaiting_review",
+  "accepted": false,
+  "candidate_revision": "071efe5961ae3b47aafe7cc1d784e01abc66f3d00685c0f7936903484b696835",
+  "path": "/home/jason/EECS442/project/agentic-real2sim/third_party/aha-3d/deliveries/office48-baseline-001/acceptance/office48-baseline-001/candidates/071efe5961ae3b47aafe7cc1d784e01abc66f3d00685c0f7936903484b696835.json",
+  "timestamp": "2026-11-04T22:20:41.079058-05:00",
+  "stage": "partial_furnished_candidate",
+  "scene": "outputs/office48-baseline-001/blender/furnished-v006/room.blend",
+  "placement_summary": {
+    "status": "no_issues_detected",
+    "counts": {
+      "error": 0,
+      "warning": 0,
+      "unverified": 0
+    },
+    "objects": 37,
+    "source_fidelity": "Not assessed; retain Pi3X and native source-view review",
+    "accepted": false
+  },
+  "scope_status": "blocked_by_open_findings; repairs authorized",
+  "selected_delivery": null,
+  "jobs_running": []
+}

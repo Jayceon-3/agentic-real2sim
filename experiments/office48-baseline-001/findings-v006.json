@@ -1,0 +1,49 @@
+{
+  "reviewed_images": [
+    "outputs/office48-baseline-001/evidence/comparisons-v006/source_vs_model.jpg",
+    "outputs/office48-baseline-001/evidence/comparisons-v006/object_focus.jpg",
+    "outputs/office48-baseline-001/evidence/comparisons-v006/cutaways.jpg"
+  ],
+  "findings": [
+    {
+      "id": "source-appearance-v006",
+      "origin": "reviewer",
+      "severity": "blocking",
+      "affected_ids": [
+        "architecture/windows",
+        "architecture/door",
+        "architecture/floor",
+        "furniture/chairs",
+        "furniture/shelf"
+      ],
+      "views": [
+        "source_000000",
+        "source_000078",
+        "source_000146",
+        "source_000224",
+        "source_000302"
+      ],
+      "originating_revision": "071efe5961ae3b47aafe7cc1d784e01abc66f3d00685c0f7936903484b696835",
+      "observation": "Actual source/model review shows unmodeled grey exterior, simplified floor and upholstery finishes, and missing shelf/calendar/desktop details. Physical diagnostic success does not close source fidelity.",
+      "resolution_needed": "Refine source-visible appearance and document any justified exterior approximation; produce current before/after source images and structured review before final acceptance."
+    },
+    {
+      "id": "source-shape-review-v006",
+      "origin": "reviewer",
+      "severity": "blocking",
+      "affected_ids": [
+        "architecture/ceiling_beams",
+        "furniture/chairs",
+        "furniture/desk"
+      ],
+      "views": [
+        "source_000078",
+        "source_000146",
+        "source_000224"
+      ],
+      "originating_revision": "071efe5961ae3b47aafe7cc1d784e01abc66f3d00685c0f7936903484b696835",
+      "observation": "Initial isolated views place major furniture plausibly, but collar-tie height/proportions, chair back profiles and desk support details remain simplified relative to the source.",
+      "resolution_needed": "Use focused source and plan/side comparisons to refine visible silhouettes and proportions; retain uncertainty for hidden geometry and review exact repaired subjects."
+    }
+  ]
+}

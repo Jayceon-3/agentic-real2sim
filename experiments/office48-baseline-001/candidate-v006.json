@@ -1,0 +1,17 @@
+{
+  "purpose": "candidate",
+  "completeness": "partial",
+  "context": {
+    "room_scene": "../../outputs/office48-baseline-001/blender/furnished-v006/room.blend",
+    "final_scene": "../../outputs/office48-baseline-001/blender/furnished-v006/room.blend",
+    "configuration": "../../experiments/office48-baseline-001/authoring-v006.json",
+    "cameras": "../../outputs/office48-baseline-001/inputs/camera-v001/camera.npz",
+    "source_video": "../../data/local/office48/source.mp4"
+  },
+  "artifacts": [
+    {
+      "role": "scene",
+      "path": "../../outputs/office48-baseline-001/blender/furnished-v006/room.blend"
+    }
+  ]
+}
