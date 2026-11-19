@@ -15,6 +15,12 @@ baseline or automatically replace furniture in an accepted scene.
 | [slurm/sam3d_workflow.sbatch](slurm/sam3d_workflow.sbatch) | Run a single workflow GPU stage independently of SSH | Slurm |
 | [slurm/sam3d_objects.sbatch](slurm/sam3d_objects.sbatch) | Great Lakes batch execution, independent of SSH | Slurm, course account, A40 |
 | [tests/](tests/) | CPU checks for the new wrapper and batch launcher | Python, NumPy, Pillow; no model weights |
+| [make_exp_worktree.sh](make_exp_worktree.sh) | Create a frozen `exp-*` worktree of `third_party/aha-3d` at a commit/tag | Git; shares runtimes by symlink |
+| [new_experiment.sh](new_experiment.sh) | Open `experiments/EXP-NNN-slug/` with `env.json`, `record.md` and an `index.csv` row | Host shell, Codex, Blender, `nvidia-smi` |
+| [exp_container.sh](exp_container.sh) | Run a command (usually `codex exec`) in the `aha3d-exp` container with only the worktree and records writable | Docker with GPU; image from `../docker/` |
+| [codex_session_stats.py](codex_session_stats.py) | Sum tokens, time and API-equivalent cost over Codex session logs | Python standard library |
+| [tum_contact_sheet.py](tum_contact_sheet.py), [tum_to_mp4.py](tum_to_mp4.py) | Pick a TUM RGB-D clip and write it as mp4 plus a frame/timestamp map | OpenCV |
+| [eval_pi3x_tum_ate.py](eval_pi3x_tum_ate.py) | Pi3X camera ATE and Sim(3) scale against TUM ground truth | NumPy |
 | Existing `*office48*.py` files below | Historical Office48 baseline authoring and review | See table |
 
 The existing Office48 entry points remain at their original paths because scripts,

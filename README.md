@@ -50,7 +50,8 @@ instructions for each experiment.
 
 ```text
 configs/         Experiment configurations
-scripts/         Office48 baseline scripts, SAM 3D Objects wrapper and Slurm launcher
+scripts/         Office48 baseline scripts, SAM 3D Objects wrapper, Slurm launcher and unattended-run scripts
+docker/          Container image for unattended agent runs
 prompts/         Versioned agent instructions
 experiments/     Small run records and observations
 data/            Data acquisition and provenance instructions
@@ -64,6 +65,12 @@ The experimental SAM 3D Objects adapter is documented in the
 native GLB export, provenance and phase timing, with a Great Lakes batch launcher.
 See the [script map](scripts/README.md) for the existing Office48 entry points.
 This route is separate from the pinned AHa-3D static baseline.
+
+Unattended agent runs (`EXP-NNN` records, shared via the team Google Drive)
+follow the protocol in [experiments/README.md](experiments/README.md): a frozen `exp-*`
+worktree of the submodule, an auto-generated record, a Docker container with no
+human approvals, and token/cost accounting. Build the image once with
+`docker build --build-arg USERNAME=$(id -un) --build-arg USER_UID=$(id -u) -t aha3d-exp:latest docker/`.
 
 For each run, record the project and AHa-3D commits, input video checksum and
 frame/time mapping, agent model and prompt, environment and GPU, runtime and

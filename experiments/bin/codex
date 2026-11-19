@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Measurement shim for experiments: forwards to the real `codex`, except that
+# `codex exec ... --ephemeral` runs with --ephemeral removed, so the session is
+# saved under ~/.codex/sessions and its token usage can be counted.
+# --ephemeral only controls whether the session file is written; the model,
+# prompt, images, sandbox and output are unchanged.
+# Use: PATH="$PROJ/experiments/bin:$PATH" codex   (from inside an exp-* worktree)
+set -euo pipefail
+self_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+real=""
+IFS=: read -ra dirs <<< "$PATH"
+for d in "${dirs[@]}"; do
+  [[ -z "$d" || "$(cd -- "$d" 2>/dev/null && pwd -P)" == "$self_dir" ]] && continue
+  if [[ -x "$d/codex" ]]; then real="$d/codex"; break; fi
+done
+[[ -n "$real" ]] || { echo "experiments/bin/codex: real codex not found on PATH" >&2; exit 127; }
+
+if [[ "${1:-}" == exec ]]; then
+  args=()
+  for a in "$@"; do [[ "$a" == --ephemeral ]] || args+=("$a"); done
+  if [[ -n "${CODEX_SHIM_LOG:-}" ]]; then
+    printf '%s exec-without-ephemeral pid=%s cwd=%s\n' "$(date -u +%FT%TZ)" "$$" "$PWD" >> "$CODEX_SHIM_LOG"
+  fi
+  exec "$real" "${args[@]}"
+fi
+exec "$real" "$@"
