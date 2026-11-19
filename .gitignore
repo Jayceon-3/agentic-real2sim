@@ -233,3 +233,11 @@ __marimo__/
 # Blender backups
 *.blend1
 *.blend2
+
+# Frozen experiment worktrees of third_party/aha-3d (see experiments/README.md)
+/exp-*/
+
+# Per-run EXP records, outputs and raw agent logs are shared via Google Drive
+experiments/EXP-*/
+experiments/index.csv
+experiments/shim.log
