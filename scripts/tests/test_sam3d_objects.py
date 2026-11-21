@@ -170,6 +170,43 @@ class WrapperTests(unittest.TestCase):
         artifacts = json.loads((self.out / "artifacts.json").read_text())
         self.assertEqual(artifacts["object.glb"]["sha256"], wrapper.digest(self.out / "object.glb"))
 
+    def test_explicit_session_reuses_model_and_does_not_retain_results(self):
+        import weakref
+        session = wrapper.InferenceSession()
+        with patch.object(wrapper, "load_runtime", wraps=wrapper.load_runtime) as load:
+            wrapper.run(wrapper.arguments(self.args), session=session)
+            model = session.model
+            original_call = model.__class__.__call__
+            meshes = []
+
+            def track(model, *args, **kwargs):
+                result = original_call(model, *args, **kwargs)
+                meshes.append(weakref.ref(result['glb']))
+                return result
+
+            with patch.object(model.__class__, '__call__', track), \
+                    patch.object(session.runtime, 'Inference', side_effect=AssertionError('must reuse')):
+                for index in (2, 3):
+                    args = self.args[:]
+                    args[args.index('--out') + 1] = str(self.root / f'request-{index}')
+                    wrapper.run(wrapper.arguments(args), session=session)
+                    report = json.loads((self.root / f'request-{index}/report.json').read_text())
+                    self.assertTrue(report['session']['reused'])
+                    self.assertEqual(report['status'], 'completed')
+                    self.assertIs(session.model, model)
+            self.assertEqual(load.call_count, 1)
+            self.assertTrue(all(reference() is None for reference in meshes))
+        self.assertFalse(self.report()['session']['reused'])
+
+    def test_session_rejects_changed_checkpoint(self):
+        session = wrapper.InferenceSession()
+        wrapper.run(wrapper.arguments(self.args), session=session)
+        self.config.write_text('changed: true\n')
+        args = self.args[:]
+        args[args.index('--out') + 1] = str(self.root / 'changed')
+        with self.assertRaisesRegex(ValueError, 'same source, checkpoint'):
+            wrapper.run(wrapper.arguments(args), session=session)
+
     def test_stage_events_have_ordered_boundaries_and_clocks(self):
         wrapper.run(wrapper.arguments(self.args + ["--events"]))
         events = [json.loads(line) for line in (self.out / 'events.jsonl').read_text().splitlines()]

@@ -181,7 +181,17 @@ def checkpoint_identity(config, revision):
             "weight_contents_hashed": False}
 
 
-def run(args):
+class InferenceSession:
+    """Opt-in process-local model reuse for controlled serial experiments."""
+
+    def __init__(self):
+        self.key = None
+        self.runtime = None
+        self.model = None
+        self.origin_out = None
+
+
+def run(args, *, session=None):
     started = time.perf_counter()
     for key in ("image", "mask", "checkpoint", "upstream", "out", "input_metadata", "cuda_home"):
         value = getattr(args, key)
@@ -255,7 +265,16 @@ def run(args):
         write_json(out / "report.json", report)
         stage_start = time.perf_counter()
         event("runtime_import", "start")
-        runtime = load_runtime(args, out)
+        session_key = ((str(args.upstream), str(args.checkpoint), digest(args.checkpoint),
+                        str(args.cuda_home or os.environ.get("CUDA_HOME")))
+                       if session is not None else None)
+        reused = session is not None and session.model is not None
+        if reused and session.key != session_key:
+            raise ValueError("A reused session requires the same source, checkpoint and CUDA toolkit")
+        runtime = session.runtime if reused else load_runtime(args, out)
+        if session is not None:
+            report["session"] = {"reused": reused,
+                                 "runtime_origin_out": session.origin_out if reused else str(out)}
         import torch
         if not torch.cuda.is_available():
             raise RuntimeError("CUDA unavailable; execute inside a GPU allocation")
@@ -289,7 +308,11 @@ def run(args):
                 write_json(out / "report.json", report)
             return value
 
-        model = measure("model_init", lambda: runtime.Inference(str(args.checkpoint), compile=False))
+        model = measure("model_init", lambda: session.model if reused else
+                        runtime.Inference(str(args.checkpoint), compile=False))
+        if session is not None and not reused:
+            session.key, session.runtime, session.model = session_key, runtime, model
+            session.origin_out = str(out)
         result = measure("inference", lambda: model(image, mask, seed=args.seed))
         report["output_keys"] = sorted(result)
 
