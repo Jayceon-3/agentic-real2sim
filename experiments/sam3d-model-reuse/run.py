@@ -32,6 +32,11 @@ def load_wrapper():
     return module
 
 
+def worker_timeout(seconds, count):
+    """Zero disables the controller deadline; Slurm still limits the job."""
+    return None if seconds == 0 else seconds * count
+
+
 def worker(request_path, out, count):
     wrapper = load_wrapper()
     request = json.loads(request_path.read_text())
@@ -116,6 +121,8 @@ def execute(args):
     shutil.copyfile(__file__, out / 'runner_snapshot.py')
     shutil.copyfile(ROOT / 'experiments/sam3d-startup-profile/monitor.py', out / 'monitor_snapshot.py')
     manifest = {'status': 'running', 'requests_per_group': args.requests, 'order': args.order,
+                'timeout_seconds_per_request': args.timeout,
+                'internal_timeout_enabled': args.timeout > 0,
                 'identity': initial, 'groups': [],
                 'host': socket.gethostname(),
                 'environment': {key: os.environ.get(key) for key in (
@@ -127,6 +134,9 @@ def execute(args):
     monitor = Monitor(out / 'resources.jsonl', 1.0)
     monitor.start()
     try:
+        print('Internal timeout: ' + (f'{args.timeout:g}s per request budget'
+                                     if args.timeout else 'disabled; Slurm job time limit still applies'),
+              flush=True)
         time.sleep(5)
         for name in (['fresh', 'reuse'] if args.order == 'AB' else ['reuse', 'fresh']):
             group = {'name': name, 'processes': []}
@@ -156,7 +166,13 @@ def execute(args):
                     monitor.set_phase('run', name + '/' + process_name, child.pid)
                     try:
                         # B gets the same total budget as its count of A requests.
-                        record['exit_code'] = child.wait(timeout=args.timeout * count)
+                        record['exit_code'] = child.wait(timeout=worker_timeout(args.timeout, count))
+                    except subprocess.TimeoutExpired:
+                        record.update(status='timeout', exit_code=None)
+                        raise
+                    except BaseException:
+                        record.update(status='interrupted', exit_code=None)
+                        raise
                     finally:
                         baseline.stop_group(child)
                         record['wall_seconds'] = time.perf_counter() - started
@@ -193,15 +209,17 @@ def main():
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--requests', type=int, default=3)
     parser.add_argument('--order', choices=['AB', 'BA'], default='AB')
-    parser.add_argument('--timeout', type=float, default=1800)
+    parser.add_argument('--timeout', type=float, default=0,
+                        help='Internal seconds per request budget; 0 disables it (default). '
+                             'Slurm still enforces the job time limit.')
     parser.add_argument('--worker', action='store_true', help=argparse.SUPPRESS)
     for key in baseline.PATH_KEYS:
         parser.add_argument('--' + key.replace('_', '-'), type=Path)
     args = parser.parse_args()
     if args.requests < 1 or (not args.worker and args.requests < 2):
         parser.error('The controller needs at least two requests')
-    if not math.isfinite(args.timeout) or args.timeout <= 0:
-        parser.error('Use a positive finite timeout')
+    if not math.isfinite(args.timeout) or args.timeout < 0:
+        parser.error('Use a nonnegative finite timeout; 0 disables the internal deadline')
     def terminate(*_):
         raise KeyboardInterrupt('SIGTERM')
     signal.signal(signal.SIGTERM, terminate)

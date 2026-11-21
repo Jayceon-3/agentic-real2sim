@@ -54,7 +54,7 @@ sbatch experiments/sam3d-model-reuse/run.sbatch \
   --input-metadata "$SAM3D_PROJECT_ROOT/data/local/sam3d-objects/office48-wall-cabinet-f000-v001/source.json" \
   --upstream "$SAM3D_SRC" --checkpoint "$MODEL_CONFIG" \
   --cuda-home "$SAM3D_CUDA_HOME" \
-  --requests 3 --order AB --out "$REUSE_OUT"
+  --requests 3 --order AB --timeout 0 --out "$REUSE_OUT"
 ```
 
 These paths match the earlier cabinet experiment; verify they exist in your
@@ -63,10 +63,21 @@ the saved request. Run output directories must be new. Input/code hashes and
 checkpoint size/mtime inventories are checked before and after each worker.
 Weights are not fully hashed, and this is not proof of weight-byte immutability.
 
-Default allocation: one A40, four CPU cores, 32 GB host RAM, four hours. A allows
-1800 seconds per worker; B allows 3 x 1800 seconds for its entire worker, not a
-separate enforced timeout for each request. No automatic retry is performed.
+Default allocation: one A40, four CPU cores, 32 GB host RAM, seven hours.
+The internal timeout is disabled by default (`--timeout 0`); Slurm still enforces
+the overall job time limit. Earlier pilots exceeded 30- and 60-minute worker
+deadlines during model initialization, so this pilot no longer assumes startup
+fits those budgets. A positive `--timeout N` enables an N-second deadline for
+each A worker and a 3 x N-second deadline for the entire B worker, not a separate
+enforced timeout for each B request. The chosen policy is printed in the log and
+recorded in `experiment.json`. No automatic retry is performed.
 One failed worker aborts the pilot. Partial logs/reports are retained.
+
+After transferring this update, check `python run.py --help` using the full script
+path to confirm that zero is accepted before submitting. Keep previous failed
+output directories and use a new output path; failed initialization cannot be
+resumed by a new process. Increasing only the Slurm time limit does not change
+an explicitly supplied positive internal timeout.
 
 For a later reverse-order check, repeat the command with `--order BA` and a new
 output path such as `cabinet-3req-ba-001`. Submit it after reviewing the pilot;

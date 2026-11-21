@@ -7,7 +7,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
-#SBATCH --time=04:00:00
+#SBATCH --time=07:00:00
 #SBATCH --output=slurm-sam3d-reuse-%j.out
 set -eo pipefail
 : "${SAM3D_PROJECT_ROOT:?Export SAM3D_PROJECT_ROOT before submission}"

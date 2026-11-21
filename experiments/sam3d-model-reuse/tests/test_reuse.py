@@ -19,6 +19,12 @@ spec.loader.exec_module(experiment)
 
 
 class ReuseTests(unittest.TestCase):
+    def test_worker_deadline_can_be_disabled_or_scaled(self):
+        self.assertIsNone(experiment.worker_timeout(0, 1))
+        self.assertIsNone(experiment.worker_timeout(0, 3))
+        self.assertEqual(experiment.worker_timeout(1800, 1), 1800)
+        self.assertEqual(experiment.worker_timeout(1800, 3), 5400)
+
     def test_controller_launches_three_fresh_workers_and_one_reuse_worker(self):
         fixture = fixtures.WrapperTests()
         fixture.setUp()
@@ -51,6 +57,7 @@ cuda = SimpleNamespace(is_available=lambda: True, synchronize=lambda: None,
         self.assertEqual(summary['groups']['reuse']['reused'], [False, True, True])
         manifest = json.loads((output / 'experiment.json').read_text())
         self.assertEqual([len(g['processes']) for g in manifest['groups']], [3, 1])
+        self.assertFalse(manifest['internal_timeout_enabled'])
         self.assertTrue(summary['all_artifact_hashes_equal'])
 
     def test_worker_three_requests_share_model_and_record_cleanup_memory(self):
