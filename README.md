@@ -60,6 +60,10 @@ third_party/aha-3d/  Upstream baseline pinned as a Git submodule
 
 ## Experiment records
 
+For the SAM 3D Objects integration timeline, measured performance, limitations
+and report/presentation material, see the
+[SAM 3D Objects progress summary](docs/SAM3D_OBJECTS_PROGRESS.md).
+
 The experimental SAM 3D Objects adapter is documented in the
 [run guide](scripts/sam3d_objects/README.md). It supports one image/mask request,
 native GLB export, provenance and phase timing, with a Great Lakes batch launcher.

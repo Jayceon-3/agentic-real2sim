@@ -79,9 +79,79 @@ output directories and use a new output path; failed initialization cannot be
 resumed by a new process. Increasing only the Slurm time limit does not change
 an explicitly supplied positive internal timeout.
 
-For a later reverse-order check, repeat the command with `--order BA` and a new
-output path such as `cabinet-3req-ba-001`. Submit it after reviewing the pilot;
-do not run both groups concurrently on one GPU.
+## Reverse-order BA check after the completed AB pilot
+
+The runner already supports BA without changing inference code. B (`reuse`)
+processes all three requests first, then A (`fresh`) launches three serial workers.
+The summary always defines speedup as fresh total / reuse total, regardless of
+execution order. This checks whether the observed benefit persists when reuse no
+longer follows the fresh group; it does not establish cold-cache conditions.
+
+In the Great Lakes project root, using the completed `cabinet-3req-ab-003` run:
+
+```bash
+source scripts/sam3d_objects/paths.sh
+export AB_OUT="$SAM3D_PROJECT_ROOT/outputs/sam3d-model-reuse/cabinet-3req-ab-003"
+export BA_OUT="$SAM3D_PROJECT_ROOT/outputs/sam3d-model-reuse/cabinet-3req-ba-001"
+
+test -f "$AB_OUT/request.json"
+test ! -e "$BA_OUT"
+python3 experiments/sam3d-model-reuse/run.py --help
+
+sbatch --time=07:00:00 experiments/sam3d-model-reuse/run.sbatch \
+  --request "$AB_OUT/request.json" \
+  --requests 3 --order BA --timeout 0 --out "$BA_OUT"
+```
+
+Inspect the resolved AB request first if paths have changed. Reusing that request
+preserves input, checkpoint, source paths, mask settings and export settings;
+the old output path is ignored. Keep the same environment, code, model weights
+and storage layout. Do not clear caches, stage weights locally or add other GPU
+workloads. The allocation still requests an A40, but may land on a different
+node; host and GPU telemetry must be retained for interpretation.
+
+After submission, use the new JOBID:
+
+```bash
+tail -n 40 slurm-sam3d-reuse-JOBID.out
+tail -n 60 "$BA_OUT/reuse/process-001.log"
+```
+
+The first process message must be `Starting reuse/process-001: 3 request(s)`.
+Fresh logs appear only after B completes. After reconnecting, source `paths.sh`
+and export `BA_OUT` again, or use a path relative to the project root.
+
+After completion, compare both results:
+
+```bash
+python3 - <<'PY'
+import json
+from pathlib import Path
+base = Path('outputs/sam3d-model-reuse')
+for label, name in [('AB', 'cabinet-3req-ab-003'), ('BA', 'cabinet-3req-ba-001')]:
+    root = base / name
+    manifest = json.loads((root / 'experiment.json').read_text())
+    summary = json.loads((root / 'summary.json').read_text())
+    print(label, 'status:', summary['status'], 'order:', manifest['order'], 'host:', manifest['host'])
+    if summary['status'] != 'completed':
+        continue
+    for group in ('fresh', 'reuse'):
+        values = summary['groups'][group]
+        print(group, 'requests:', values['completed_requests'],
+              'total minutes:', round(values['active_process_wall_seconds'] / 60, 2),
+              'reused:', values['reused'])
+    print('speedup:', round(summary['speedup'], 3),
+          'later reuse seconds:', round(summary['reuse_later_request_median_seconds'], 2))
+PY
+```
+
+Require three successful requests per group; inspect B's first request separately
+from requests 2/3. Compare import/init/inference times, post-cleanup memory and
+artifact differences, not only speedup. If speedup changes substantially, report
+both values with order and node, rather than averaging them into a universal
+claim. AB then BA across separate allocations also changes time and potentially
+node; more repetitions are needed to separate those effects. Preserve and
+download the whole BA directory plus its new Slurm log, just as for AB.
 
 Within an existing GPU allocation, source `scripts/sam3d_objects/env.sh` and use
 `python -u experiments/sam3d-model-reuse/run.py` with the same arguments instead

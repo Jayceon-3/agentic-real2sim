@@ -26,6 +26,12 @@ class ReuseTests(unittest.TestCase):
         self.assertEqual(experiment.worker_timeout(1800, 3), 5400)
 
     def test_controller_launches_three_fresh_workers_and_one_reuse_worker(self):
+        self.check_controller_order('AB')
+
+    def test_controller_ba_runs_reuse_first_and_keeps_speedup_definition(self):
+        self.check_controller_order('BA')
+
+    def check_controller_order(self, order):
         fixture = fixtures.WrapperTests()
         fixture.setUp()
         self.addCleanup(fixture.doCleanups)
@@ -47,7 +53,7 @@ cuda = SimpleNamespace(is_available=lambda: True, synchronize=lambda: None,
                                             for k, v in vars(request).items() if v is not None}))
         output = fixture.root / 'pilot'
         command = [sys.executable, str(Path(experiment.__file__)), '--request', str(request_path),
-                   '--out', str(output), '--requests', '3']
+                   '--out', str(output), '--requests', '3', '--order', order]
         env = dict(os.environ, PYTHONPATH=str(fake_modules), EXPECTED_CUDA=str(fixture.cuda))
         result = subprocess.run(command, capture_output=True, text=True, env=env, timeout=60)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -56,7 +62,14 @@ cuda = SimpleNamespace(is_available=lambda: True, synchronize=lambda: None,
         self.assertEqual(summary['groups']['fresh']['reused'], [False]*3)
         self.assertEqual(summary['groups']['reuse']['reused'], [False, True, True])
         manifest = json.loads((output / 'experiment.json').read_text())
-        self.assertEqual([len(g['processes']) for g in manifest['groups']], [3, 1])
+        expected = ['fresh', 'reuse'] if order == 'AB' else ['reuse', 'fresh']
+        self.assertEqual([g['name'] for g in manifest['groups']], expected)
+        self.assertEqual([len(g['processes']) for g in manifest['groups']],
+                         [3, 1] if order == 'AB' else [1, 3])
+        self.assertEqual(manifest['order'], order)
+        self.assertAlmostEqual(summary['speedup'],
+                               summary['groups']['fresh']['active_process_wall_seconds'] /
+                               summary['groups']['reuse']['active_process_wall_seconds'])
         self.assertFalse(manifest['internal_timeout_enabled'])
         self.assertTrue(summary['all_artifact_hashes_equal'])
 
