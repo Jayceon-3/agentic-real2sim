@@ -1,0 +1,43 @@
+diff --git a/experiments/office48-sam3d-ab/scene.py b/experiments/office48-sam3d-ab/scene.py
+index 324bb0d..eec37ea 100644
+--- a/experiments/office48-sam3d-ab/scene.py
++++ b/experiments/office48-sam3d-ab/scene.py
+@@ -74,7 +74,7 @@ def render(args, lock, obj):
+     report = {"status": "running", "object": obj["id"], "role": args.role, "label": args.label,
+               "lock_sha256": digest(args.lock), "scene_sha256": digest(args.scene),
+               "script_sha256": digest(__file__), "views": [], "samples": args.samples,
+-              "blender_version": bpy.app.version_string, "engine": "CYCLES", "device": "CPU",
++              "blender_version": bpy.app.version_string, "engine": "CYCLES", "device": getattr(args, "device", "CPU"),
+               "mask_policy": "Object Index pass, ID 1, no mask antialiasing; full-room occlusion retained."}
+     write(args.out / "render.json", report)
+     started = time.perf_counter()
+@@ -95,7 +95,20 @@ def render(args, lock, obj):
+         scene.render.use_border = False
+         scene.render.use_sequencer = False
+         scene.render.engine = "CYCLES"
+-        scene.cycles.device = "CPU"
++        device = getattr(args, "device", "CPU")
++        if device == "CUDA":
++            preferences = bpy.context.preferences.addons["cycles"].preferences
++            preferences.compute_device_type = "CUDA"
++            preferences.get_devices()
++            available = [item for item in preferences.devices if item.type == "CUDA"]
++            if not available:
++                raise ValueError("No CUDA Cycles device is available")
++            for item in preferences.devices:
++                item.use = item.type == "CUDA"
++            report["cuda_devices"] = [item.name for item in available]
++            scene.cycles.device = "GPU"
++        else:
++            scene.cycles.device = "CPU"
+         scene.cycles.samples = args.samples
+         scene.cycles.use_denoising = False
+         scene.cycles.seed = 0
+@@ -209,6 +222,7 @@ def main():
+     parser.add_argument("--role", choices=["alignment", "evaluation"], default="evaluation")
+     parser.add_argument("--label", help="B-seed-42/43/44 or A-run-1/2/3")
+     parser.add_argument("--samples", type=int, default=32)
++    parser.add_argument("--device", choices=["CPU", "CUDA"], default="CPU")
+     args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
+     for key in ("root", "lock", "out", "scene", "glb", "placement"):
+         if getattr(args, key) is not None:
