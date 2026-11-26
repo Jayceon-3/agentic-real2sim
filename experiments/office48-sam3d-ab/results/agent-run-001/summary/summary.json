@@ -1,0 +1,47 @@
+{
+  "groups": [
+    {
+      "object": "cabinet",
+      "method": "B",
+      "scored_runs": 3,
+      "planned_runs": 3,
+      "mean_iou": 0.2586280861359606,
+      "sample_std_iou": 0.004557322616837734
+    },
+    {
+      "object": "chair",
+      "method": "B",
+      "scored_runs": 3,
+      "planned_runs": 3,
+      "mean_iou": 0.8668701635889503,
+      "sample_std_iou": 0.010135408691110005
+    }
+  ],
+  "inputs": [
+    {
+      "path": "/home/jason/EECS442/project/agentic-real2sim/outputs/office48-sam3d-ab/agent-run-001/metrics/evaluation/cabinet-seed-42/scores.json",
+      "sha256": "080cdc32297bee2f9f92f8150e5ac0534a3eeec7a8269d5a1471e1d7f2485f34"
+    },
+    {
+      "path": "/home/jason/EECS442/project/agentic-real2sim/outputs/office48-sam3d-ab/agent-run-001/metrics/evaluation/cabinet-seed-43/scores.json",
+      "sha256": "c6c5798763d5b64c9cee5721a022c1454bc3849556b5a52471c9fa3e984d84a4"
+    },
+    {
+      "path": "/home/jason/EECS442/project/agentic-real2sim/outputs/office48-sam3d-ab/agent-run-001/metrics/evaluation/cabinet-seed-44/scores.json",
+      "sha256": "183597182c08e9d4a4df7875547d80cbd56fa944dc01eaa95f56f2b51d1c0400"
+    },
+    {
+      "path": "/home/jason/EECS442/project/agentic-real2sim/outputs/office48-sam3d-ab/agent-run-001/metrics/evaluation/chair-seed-42/scores.json",
+      "sha256": "0af275b476c5cc0191d4b5c240b0e0fc7d117099539307063ae8fde37ca7cedc"
+    },
+    {
+      "path": "/home/jason/EECS442/project/agentic-real2sim/outputs/office48-sam3d-ab/agent-run-001/metrics/evaluation/chair-seed-43/scores.json",
+      "sha256": "acdb5b79d6ea20933338aeecc6520036b387f8c7fdc7ad108aace43f73ce6d99"
+    },
+    {
+      "path": "/home/jason/EECS442/project/agentic-real2sim/outputs/office48-sam3d-ab/agent-run-001/metrics/evaluation/chair-seed-44/scores.json",
+      "sha256": "a6ebc0dd58a3f6e8c56fa65ff272726a275c8325ea9a4d292eb955b8a6928f25"
+    }
+  ],
+  "limitation": "Missing or failed runs are not scored; report their status and costs separately. B-only scores do not establish improvement over A."
+}

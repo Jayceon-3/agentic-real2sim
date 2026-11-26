@@ -1,0 +1,3 @@
+object,method,scored_runs,planned_runs,mean_iou,sample_std_iou
+cabinet,B,3,3,0.2586280861359606,0.004557322616837734
+chair,B,3,3,0.8668701635889503,0.010135408691110005

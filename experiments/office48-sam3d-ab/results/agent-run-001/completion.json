@@ -1,0 +1,215 @@
+{
+  "status": "completed_with_recorded_limitations",
+  "completed_at": "2026-11-26T15:45:42.405735+00:00",
+  "phase": "B-only staged object replacement, alignment and fixed-view evaluation",
+  "candidates": [
+    {
+      "candidate": "cabinet-seed-42",
+      "scene": "scenes/cabinet-seed-42-final/scene.blend",
+      "scene_sha256": "5433f5e46ce877ecb2d8506bbb4db2e8015e98407be040e389528dc847d8ad4d",
+      "alignment_mean_iou": 0.2948634478998526,
+      "evaluation_mean_iou": 0.25462210754215436,
+      "evaluation_per_view": [
+        {
+          "frame": 210,
+          "intersection": 220,
+          "union": 3960,
+          "iou": 0.05555555555555555
+        },
+        {
+          "frame": 255,
+          "intersection": 2559,
+          "union": 8180,
+          "iou": 0.3128361858190709
+        },
+        {
+          "frame": 285,
+          "intersection": 6729,
+          "union": 17015,
+          "iou": 0.3954745812518366
+        }
+      ],
+      "static_check": "no_issues_detected",
+      "static_target_issues": [],
+      "alignment_search_seconds": 29.315142093000077
+    },
+    {
+      "candidate": "cabinet-seed-43",
+      "scene": "scenes/cabinet-seed-43-final/scene.blend",
+      "scene_sha256": "1237a0fd6d5f34bcc68842c4014c7db7c1ab675e64b0bcf5579bb4c39f24649f",
+      "alignment_mean_iou": 0.2917566419038985,
+      "evaluation_mean_iou": 0.2635862896490273,
+      "evaluation_per_view": [
+        {
+          "frame": 210,
+          "intersection": 227,
+          "union": 3797,
+          "iou": 0.0597840400316039
+        },
+        {
+          "frame": 255,
+          "intersection": 2691,
+          "union": 8274,
+          "iou": 0.3252356780275562
+        },
+        {
+          "frame": 285,
+          "intersection": 6900,
+          "union": 17006,
+          "iou": 0.4057391508879219
+        }
+      ],
+      "static_check": "no_issues_detected",
+      "static_target_issues": [],
+      "alignment_search_seconds": 26.32458116199996
+    },
+    {
+      "candidate": "cabinet-seed-44",
+      "scene": "scenes/cabinet-seed-44-final/scene.blend",
+      "scene_sha256": "02b7bfd42b2b0da58c74df6666e08f3ff7d086c7cc90357fb2ac79e1c4bae8ce",
+      "alignment_mean_iou": 0.29514012238304976,
+      "evaluation_mean_iou": 0.2576758612167001,
+      "evaluation_per_view": [
+        {
+          "frame": 210,
+          "intersection": 226,
+          "union": 3838,
+          "iou": 0.058884835852006254
+        },
+        {
+          "frame": 255,
+          "intersection": 2582,
+          "union": 8230,
+          "iou": 0.313730255164034
+        },
+        {
+          "frame": 285,
+          "intersection": 6795,
+          "union": 16970,
+          "iou": 0.4004124926340601
+        }
+      ],
+      "static_check": "no_issues_detected",
+      "static_target_issues": [],
+      "alignment_search_seconds": 26.686209374999862
+    },
+    {
+      "candidate": "chair-seed-42",
+      "scene": "scenes/chair-seed-42-final/scene.blend",
+      "scene_sha256": "057f830499136ff2ff65bdac630e4b9281af1eae83376e97b1c0fb1962f5c083",
+      "alignment_mean_iou": 0.9216615066785723,
+      "evaluation_mean_iou": 0.8783121237171229,
+      "evaluation_per_view": [
+        {
+          "frame": 30,
+          "intersection": 16107,
+          "union": 18343,
+          "iou": 0.8781006378454996
+        },
+        {
+          "frame": 195,
+          "intersection": 35260,
+          "union": 38812,
+          "iou": 0.908481912810471
+        },
+        {
+          "frame": 240,
+          "intersection": 68670,
+          "union": 80945,
+          "iou": 0.8483538204953981
+        }
+      ],
+      "static_check": "no_issues_detected",
+      "static_target_issues": [],
+      "alignment_search_seconds": 55.8872090939999
+    },
+    {
+      "candidate": "chair-seed-43",
+      "scene": "scenes/chair-seed-43-final/scene.blend",
+      "scene_sha256": "8f72899af5f2bacdf5697c5607414687dec29a415ece3ced8388eba43ba4c043",
+      "alignment_mean_iou": 0.9097901903751466,
+      "evaluation_mean_iou": 0.8590190026276606,
+      "evaluation_per_view": [
+        {
+          "frame": 30,
+          "intersection": 16419,
+          "union": 18488,
+          "iou": 0.8880895716140199
+        },
+        {
+          "frame": 195,
+          "intersection": 35057,
+          "union": 39729,
+          "iou": 0.8824032822371567
+        },
+        {
+          "frame": 240,
+          "intersection": 67507,
+          "union": 83697,
+          "iou": 0.8065641540318051
+        }
+      ],
+      "static_check": "no_issues_detected",
+      "static_target_issues": [],
+      "alignment_search_seconds": 55.700950937000016
+    },
+    {
+      "candidate": "chair-seed-44",
+      "scene": "scenes/chair-seed-44-final/scene.blend",
+      "scene_sha256": "42a500508b1f2b80157dda19b3d2d59eba65f586114e61579014d8af676e9d30",
+      "alignment_mean_iou": 0.8653503279577237,
+      "evaluation_mean_iou": 0.8632793644220674,
+      "evaluation_per_view": [
+        {
+          "frame": 30,
+          "intersection": 16578,
+          "union": 18672,
+          "iou": 0.887853470437018
+        },
+        {
+          "frame": 195,
+          "intersection": 34215,
+          "union": 39375,
+          "iou": 0.8689523809523809
+        },
+        {
+          "frame": 240,
+          "intersection": 66401,
+          "union": 79710,
+          "iou": 0.8330322418768034
+        }
+      ],
+      "static_check": "incomplete",
+      "static_target_issues": [
+        {
+          "severity": "unverified",
+          "code": "open_geometry",
+          "objects": [
+            "furniture/chair-guest-1"
+          ],
+          "message": "Some components are not closed two-manifold surfaces; inside/outside tests are unavailable for them.",
+          "next_action": "Review surface-overlap warnings; use closed collision geometry for volume certification.",
+          "evidence": {}
+        }
+      ],
+      "alignment_search_seconds": 54.15324110999995
+    }
+  ],
+  "technical_validation": "passed",
+  "production_rgb_mask_pairs": 30,
+  "evaluation_views": 18,
+  "alignment_views": 12,
+  "independent_A_comparison_completed": false,
+  "full_room_acceptance": "not_assessed",
+  "limitations": [
+    "Fixed evaluation views were visible in earlier annotation work; they are not a strictly unseen test set.",
+    "Low cabinet development IoU is retained; no non-target furniture/camera edits, target geometry deformation or evaluation-based tuning are allowed.",
+    "Chair seed 44 has open mesh components; volume inside/outside collision certification is unavailable. The original generated geometry is retained and this issue is reported, not counted as a clean physical pass.",
+    "Static collision/support diagnostics are not rigid-body simulation or full-room reconstruction acceptance.",
+    "All six B candidates were aligned by the ongoing Codex session, not six independent agent sessions.",
+    "Initialization and search bounds use the common baseline target bounds. A must receive the same layout priors, alignment masks, facing constraints and search budget for a fair comparison.",
+    "Original imported materials and shared room lighting are retained; this is not a photometric fit.",
+    "Source dimensions are uncalibrated predicted metres. Static diagnostics are not measured physical accuracy or dynamics certification.",
+    "Full model/API token and subscription-cost accounting is unavailable for this interactive session. Raw stage times and failed/debug stages are retained."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "coordinate_space": "blender_imported_to_scene_world",
+  "translation_m": [
+    -1.8241161647588056,
+    3.925822298795337,
+    0.32515235378799845
+  ],
+  "rotation_euler_xyz_deg": [
+    0.0,
+    0.0,
+    3.1490319450198574
+  ],
+  "scale": [
+    1.3188715855206588,
+    1.3188715855206588,
+    1.3188715855206588
+  ],
+  "semantic_class": "furniture/storage",
+  "note": "Agent placement from two alignment views only; uniform scale; original geometry and materials retained."
+}

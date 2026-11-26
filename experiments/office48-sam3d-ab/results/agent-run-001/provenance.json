@@ -1,0 +1,66 @@
+{
+  "created_at": "2026-11-26T15:27:51.623695+00:00",
+  "actor": "Codex root agent",
+  "project_head": "03130313cd042c45d23b911bff9434b426c65260",
+  "project_status": [
+    " M experiments/office48-sam3d-ab/scene.py",
+    " m third_party/aha-3d",
+    "?? divider_inputs.zip",
+    "?? divider_inputs/",
+    "?? monitor_2_inputs.zip",
+    "?? monitor_2_inputs/",
+    "?? rear_chair_inputs.zip",
+    "?? rear_chair_inputs/",
+    "?? sam3-all-candidates-001/",
+    "?? sam3-all-candidates-review-001.tar.gz",
+    "?? scripts/sam3d_objects/run_pair.sh"
+  ],
+  "host": "ZDX",
+  "python": "3.13.5",
+  "lock_sha256": "3ddca3bfe840d75e1c01369fe19ac9b5ad139feacd134df3a4f84268d01aa36f",
+  "source_resources": {
+    "video": {
+      "path": "data/local/office48/source.mp4",
+      "sha256": "993af1f9c6a58d9df39a0d95309e4ed5fec489cce3d25a5d8c7b503827d0a724"
+    },
+    "scene": {
+      "path": "outputs/office48-baseline-001/blender/furnished-v006/room.blend",
+      "sha256": "0e4972419b0374b7f07e57be64f0a670f0f05f36f9e5f8e62f1e1b395210bf47"
+    },
+    "camera": {
+      "path": "outputs/office48-baseline-001/inputs/camera-v001/camera.npz",
+      "sha256": "3848ea776ff5a61d5fedf50d5f6a7829e27e8519efcd4f80a6fdcf6220f8666c"
+    }
+  },
+  "asset_hashes": {
+    "cabinet-seed-42": {
+      "bytes": 6334628,
+      "sha256": "adb5b423e957307aac23814ecf3605d39c12fb185a044a3db2ade83e3404daca"
+    },
+    "cabinet-seed-43": {
+      "bytes": 7388904,
+      "sha256": "21a774e99b771c4671b037bf5c9dcc3e6e690317a28cb58d74aea278db2aa9a6"
+    },
+    "cabinet-seed-44": {
+      "bytes": 6962856,
+      "sha256": "cbdf1ac784914f5e330118ca6a6a0b6cad3f9088d21fbbbde67a57d3ee803ab0"
+    },
+    "chair-seed-42": {
+      "bytes": 11017512,
+      "sha256": "50cd21a4d65e0f2e225b74d1f0ff205b1a7ead1b203ae2da6bd5294941c1c457"
+    },
+    "chair-seed-43": {
+      "bytes": 12241288,
+      "sha256": "fa9f36efb1bf449dd8316209e0a8c864202f523f307fb0af5dc7d1b24cda93c3"
+    },
+    "chair-seed-44": {
+      "bytes": 11861128,
+      "sha256": "e8c209c183c3d8bd972021754626c52704b04b7ec1e39f51e17703d80d94ad82"
+    }
+  },
+  "notes": [
+    "No human placement edits were consumed; existing identity-placement work scenes were preserved.",
+    "No evaluation render or score is used to choose placements. Evaluation images were previously inspected during annotation; the evaluation split is fixed-view, not strictly unseen.",
+    "This is a staged B experiment with supplied generated assets and reviewed masks, not a fresh end-to-end unattended agent run or an A/B quality claim."
+  ]
+}

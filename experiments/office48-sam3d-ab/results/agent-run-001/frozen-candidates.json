@@ -1,0 +1,206 @@
+{
+  "frozen_at": "2026-11-26T15:38:23.594787+00:00",
+  "reviewer": "Codex",
+  "lock_sha256": "3ddca3bfe840d75e1c01369fe19ac9b5ad139feacd134df3a4f84268d01aa36f",
+  "alignment_policy": "Two preregistered alignment views per object, uniform scale, source-verified front, upright geometry and floor contact; original room and materials preserved.",
+  "evaluation_feedback_used": false,
+  "candidates": [
+    {
+      "candidate": "cabinet-seed-42",
+      "scene": "scenes/cabinet-seed-42-final/scene.blend",
+      "scene_sha256": "5433f5e46ce877ecb2d8506bbb4db2e8015e98407be040e389528dc847d8ad4d",
+      "placement": "placements/cabinet-seed-42.json",
+      "placement_sha256": "6633520ff92dcb4ca537ac6e5b35ff21ae7a1d35a7d2ade01b8bbcef9023a671",
+      "visual_review": "suitable_for_frozen_experiment_with_recorded_limitations",
+      "observations": "Upright cabinet with front toward room -Y; drawer/open-shelf front and closed side geometry inspected. Source-view mismatch remains, especially behind the fixed foreground chair. Hidden front details vary with seed and are not independently verified.",
+      "evidence": [
+        {
+          "path": "review/alignment-cabinet-seed-42.jpg",
+          "sha256": "e87276aa090d0f58ad63397af033a5ccb6e6f20c8fd466accd2d1e04bebae4ab"
+        },
+        {
+          "path": "review/cabinet-seed-42-isolated-plan.png",
+          "sha256": "e2c20226bfc15366cd8609f5e7fe9ec264e9c8362073dacf8a9e57d4ee6ff658"
+        },
+        {
+          "path": "review/cabinet-seed-42-isolated-front.png",
+          "sha256": "0aa4fb0d2373c1017dccbd487b4ca86ad25ee46767c951ce43bedfed5f070170"
+        },
+        {
+          "path": "review/cabinet-seed-42-isolated-side.png",
+          "sha256": "98092e858a9ade9ad2cc07e8e03491913b1bbfd757f7252904e5de6d8c2a53f5"
+        }
+      ],
+      "non_target_objects_unchanged": 370,
+      "static_placement_status": "no_issues_detected",
+      "static_target_issues": []
+    },
+    {
+      "candidate": "cabinet-seed-43",
+      "scene": "scenes/cabinet-seed-43-final/scene.blend",
+      "scene_sha256": "1237a0fd6d5f34bcc68842c4014c7db7c1ab675e64b0bcf5579bb4c39f24649f",
+      "placement": "placements/cabinet-seed-43.json",
+      "placement_sha256": "8faef89b71035f4d9ee52430e0db0ef7dd7b14bdc9e13712a3e38d4b5252c8eb",
+      "visual_review": "suitable_for_frozen_experiment_with_recorded_limitations",
+      "observations": "Upright cabinet with front toward room -Y; drawer/open-shelf front and closed side geometry inspected. Source-view mismatch remains, especially behind the fixed foreground chair. Hidden front details vary with seed and are not independently verified.",
+      "evidence": [
+        {
+          "path": "review/alignment-cabinet-seed-43.jpg",
+          "sha256": "e9bf2ba73ae8fa119935de8d94bc8400efd6ac7d473b67d45fc39f0d21699db0"
+        },
+        {
+          "path": "review/cabinet-seed-43-isolated-plan.png",
+          "sha256": "8defacbbd80507a6986d50c9d680f84ef9d71068d2de976bf8e7485b7c54b783"
+        },
+        {
+          "path": "review/cabinet-seed-43-isolated-front.png",
+          "sha256": "c80dae681c4b55fccfd26d2c121f997ff9f0305b37a89212d7197e49f0ada3bc"
+        },
+        {
+          "path": "review/cabinet-seed-43-isolated-side.png",
+          "sha256": "c9df64ea7d0218480155edf9b44f241b3444934c0a060c1ad156823d092ffbd1"
+        }
+      ],
+      "non_target_objects_unchanged": 370,
+      "static_placement_status": "no_issues_detected",
+      "static_target_issues": []
+    },
+    {
+      "candidate": "cabinet-seed-44",
+      "scene": "scenes/cabinet-seed-44-final/scene.blend",
+      "scene_sha256": "02b7bfd42b2b0da58c74df6666e08f3ff7d086c7cc90357fb2ac79e1c4bae8ce",
+      "placement": "placements/cabinet-seed-44.json",
+      "placement_sha256": "e62d0758502031bea9accc6fc60a1107d8bfdc2d5bf2bdb0efa46d6a0b337fe3",
+      "visual_review": "suitable_for_frozen_experiment_with_recorded_limitations",
+      "observations": "Upright cabinet with front toward room -Y; drawer/open-shelf front and closed side geometry inspected. Source-view mismatch remains, especially behind the fixed foreground chair. Hidden front details vary with seed and are not independently verified.",
+      "evidence": [
+        {
+          "path": "review/alignment-cabinet-seed-44.jpg",
+          "sha256": "6c246b2f0cdcf4debbe469af588afb8c1922776a4cd57eb0c095c4623f7d854f"
+        },
+        {
+          "path": "review/cabinet-seed-44-isolated-plan.png",
+          "sha256": "3b079535a6016240840fa8dc49f74a43315e5bbaddf72ded942bda6218adce6d"
+        },
+        {
+          "path": "review/cabinet-seed-44-isolated-front.png",
+          "sha256": "5e0b5ce70132a49a8fd4c39009a8c8a556104d55aded251b5a5f8568d42a3aad"
+        },
+        {
+          "path": "review/cabinet-seed-44-isolated-side.png",
+          "sha256": "9807aeb2eb96935fe08011f2d7f7f3e2acffd95adc0a90902d35a23f3b15bd13"
+        }
+      ],
+      "non_target_objects_unchanged": 370,
+      "static_placement_status": "no_issues_detected",
+      "static_target_issues": []
+    },
+    {
+      "candidate": "chair-seed-42",
+      "scene": "scenes/chair-seed-42-final/scene.blend",
+      "scene_sha256": "057f830499136ff2ff65bdac630e4b9281af1eae83376e97b1c0fb1962f5c083",
+      "placement": "placements/chair-seed-42.json",
+      "placement_sha256": "84214d2db9874763229c5a51ac9a212d821666abae0c2f90b65043058d972135",
+      "visual_review": "suitable_for_frozen_experiment_with_recorded_limitations",
+      "observations": "Same entrance-side guest chair, upright and facing approximately -X. Seat/back/legs and cropped source projections inspected. Remaining back-profile and leg differences vary with seed; original material and shared room lighting do not reproduce source appearance fully.",
+      "evidence": [
+        {
+          "path": "review/alignment-chair-seed-42.jpg",
+          "sha256": "667088c038b5348ff78a9f16ecfce6cbca868f69e5a03159a4077b8a5b8fa12f"
+        },
+        {
+          "path": "review/chair-seed-42-isolated-plan.png",
+          "sha256": "3b5e0e1c951da9c50f132a22b6c2648292ae01b9d317ae8f1cefc4c985bc951d"
+        },
+        {
+          "path": "review/chair-seed-42-isolated-front.png",
+          "sha256": "041409d0c6ddfe1a60f43a2c6c1e2a48ef5343213b1eebdc7de74712e34b66df"
+        },
+        {
+          "path": "review/chair-seed-42-isolated-side.png",
+          "sha256": "d3205a323996163d93d299f60b69a88fb4596d4d514444a8524ae897cff501a2"
+        }
+      ],
+      "non_target_objects_unchanged": 352,
+      "static_placement_status": "no_issues_detected",
+      "static_target_issues": []
+    },
+    {
+      "candidate": "chair-seed-43",
+      "scene": "scenes/chair-seed-43-final/scene.blend",
+      "scene_sha256": "8f72899af5f2bacdf5697c5607414687dec29a415ece3ced8388eba43ba4c043",
+      "placement": "placements/chair-seed-43.json",
+      "placement_sha256": "b692058d0726f70372ba430f9458b1d86ba9e0804907ccf24e4e2b98e6540151",
+      "visual_review": "suitable_for_frozen_experiment_with_recorded_limitations",
+      "observations": "Same entrance-side guest chair, upright and facing approximately -X. Seat/back/legs and cropped source projections inspected. Remaining back-profile and leg differences vary with seed; original material and shared room lighting do not reproduce source appearance fully.",
+      "evidence": [
+        {
+          "path": "review/alignment-chair-seed-43.jpg",
+          "sha256": "4fbf2b531fdcddc6f0fc3290592631bcbc8c7df1c8f7f2d3846baa3296e42e2d"
+        },
+        {
+          "path": "review/chair-seed-43-isolated-plan.png",
+          "sha256": "10edee374f699e86a0fdafa6a938e186ef61b4f9609535113d3bf1b4bc6b2b12"
+        },
+        {
+          "path": "review/chair-seed-43-isolated-front.png",
+          "sha256": "3cb4b1dde9e6666c65acf8fa753928ef4fb0df0ac8aabaefe87f683b85bd9ad4"
+        },
+        {
+          "path": "review/chair-seed-43-isolated-side.png",
+          "sha256": "cf1c55b336a294641d5b58cc76b064000f8b8d2dbf531afb308673e68201822f"
+        }
+      ],
+      "non_target_objects_unchanged": 352,
+      "static_placement_status": "no_issues_detected",
+      "static_target_issues": []
+    },
+    {
+      "candidate": "chair-seed-44",
+      "scene": "scenes/chair-seed-44-final/scene.blend",
+      "scene_sha256": "42a500508b1f2b80157dda19b3d2d59eba65f586114e61579014d8af676e9d30",
+      "placement": "placements/chair-seed-44.json",
+      "placement_sha256": "36a3fed68514d8575884da76cc21cd82e46c6050aadaf7e2095c37f46f8c6644",
+      "visual_review": "suitable_for_frozen_experiment_with_recorded_limitations",
+      "observations": "Same entrance-side guest chair, upright and facing approximately -X. Seat/back/legs and cropped source projections inspected. Remaining back-profile and leg differences vary with seed; original material and shared room lighting do not reproduce source appearance fully.",
+      "evidence": [
+        {
+          "path": "review/alignment-chair-seed-44.jpg",
+          "sha256": "17a19c4175a4fd0ac112ab359542491b6d130eae95b34741a85dd16b87f122d3"
+        },
+        {
+          "path": "review/chair-seed-44-isolated-plan.png",
+          "sha256": "23fba6eb10a38e1622cfba0d841e5c1fb8535bcafb4f92587398dbae5a0073b3"
+        },
+        {
+          "path": "review/chair-seed-44-isolated-front.png",
+          "sha256": "e241831e5b3830bfb682347dfcbea5e27488c9ea45e283c33853fd8394bca5f6"
+        },
+        {
+          "path": "review/chair-seed-44-isolated-side.png",
+          "sha256": "a803e1d8ceea52a508233877d1995904ce38ff369268bc98042bb3d80e2c19fc"
+        }
+      ],
+      "non_target_objects_unchanged": 352,
+      "static_placement_status": "incomplete",
+      "static_target_issues": [
+        {
+          "severity": "unverified",
+          "code": "open_geometry",
+          "objects": [
+            "furniture/chair-guest-1"
+          ],
+          "message": "Some components are not closed two-manifold surfaces; inside/outside tests are unavailable for them.",
+          "next_action": "Review surface-overlap warnings; use closed collision geometry for volume certification.",
+          "evidence": {}
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Fixed evaluation views were visible in earlier annotation work; they are not a strictly unseen test set.",
+    "Low cabinet development IoU is retained; no non-target furniture/camera edits, target geometry deformation or evaluation-based tuning are allowed.",
+    "Chair seed 44 has open mesh components; volume inside/outside collision certification is unavailable. The original generated geometry is retained and this issue is reported, not counted as a clean physical pass.",
+    "Static collision/support diagnostics are not rigid-body simulation or full-room reconstruction acceptance."
+  ]
+}

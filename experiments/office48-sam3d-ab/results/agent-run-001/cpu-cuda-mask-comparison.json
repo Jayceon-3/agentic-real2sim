@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "comparisons": [
+    {
+      "frame": 240,
+      "cpu_sha256": "7ce9ef09e9b3b64d39531c9deed963ccf3f1c476c6088dcac79adb6b55236cce",
+      "cuda_sha256": "80fd38264429956ad4c1fc9b5b2857e21089ddb17343cce2cfaf821013ef1c09",
+      "different_pixels": 0,
+      "mask_iou": 1.0
+    },
+    {
+      "frame": 270,
+      "cpu_sha256": "2ee53bdde434dd52615c19c44269ea45de76eda917b95b3c867e5026dcffeaef",
+      "cuda_sha256": "6467d1237afc695ea64670103cfb8f73f0993a343183d464d5a26cbd9abcb3d2",
+      "different_pixels": 0,
+      "mask_iou": 1.0
+    }
+  ]
+}

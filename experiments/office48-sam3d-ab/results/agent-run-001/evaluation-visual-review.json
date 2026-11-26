@@ -1,0 +1,57 @@
+{
+  "reviewed_at": "2026-11-26T15:45:41.970313+00:00",
+  "reviewer": "Codex",
+  "status": "all_six_evaluation_sheets_inspected",
+  "candidate_freeze": "2026-11-26T15:38:23.594787+00:00",
+  "purpose": "Describe fixed evaluation findings; no scene edits or placement selection",
+  "candidates": [
+    {
+      "candidate": "cabinet-seed-42",
+      "scene_sha256": "5433f5e46ce877ecb2d8506bbb4db2e8015e98407be040e389528dc847d8ad4d",
+      "evidence": "review/evaluation-cabinet-seed-42.jpg",
+      "evidence_sha256": "b0fb6327af8e42967184ce9738e81b4f2a14f517dab43395bad3625b1990b313",
+      "observations": "Visible cabinet silhouette mismatch across all three views; severe occlusion and very small ground-truth visible area at source 210; remaining lower-body and top/profile differences at 255/285. Geometry and unchanged room occlusion both affect visible-mask score.",
+      "placement_changed_after_review": false
+    },
+    {
+      "candidate": "cabinet-seed-43",
+      "scene_sha256": "1237a0fd6d5f34bcc68842c4014c7db7c1ab675e64b0bcf5579bb4c39f24649f",
+      "evidence": "review/evaluation-cabinet-seed-43.jpg",
+      "evidence_sha256": "ff19c482238f819f661320dc3e530ac43743cfb1d2b06a952c71b564561f5215",
+      "observations": "Visible cabinet silhouette mismatch across all three views; severe occlusion and very small ground-truth visible area at source 210; remaining lower-body and top/profile differences at 255/285. Geometry and unchanged room occlusion both affect visible-mask score.",
+      "placement_changed_after_review": false
+    },
+    {
+      "candidate": "cabinet-seed-44",
+      "scene_sha256": "02b7bfd42b2b0da58c74df6666e08f3ff7d086c7cc90357fb2ac79e1c4bae8ce",
+      "evidence": "review/evaluation-cabinet-seed-44.jpg",
+      "evidence_sha256": "471093ce78d7805b7166d146b0939d21d5e66f2bdec682253ea6b9c4952de7b2",
+      "observations": "Visible cabinet silhouette mismatch across all three views; severe occlusion and very small ground-truth visible area at source 210; remaining lower-body and top/profile differences at 255/285. Geometry and unchanged room occlusion both affect visible-mask score.",
+      "placement_changed_after_review": false
+    },
+    {
+      "candidate": "chair-seed-42",
+      "scene_sha256": "057f830499136ff2ff65bdac630e4b9281af1eae83376e97b1c0fb1962f5c083",
+      "evidence": "review/evaluation-chair-seed-42.jpg",
+      "evidence_sha256": "0255bcc066d6b6268c34e9d6fecb9314d6b64f38a0171113122f4a8631ec993f",
+      "observations": "Correct entrance-side guest chair; strong overall silhouette overlap across three views, with remaining back profile, side outline and leg differences. Shared lighting/material appearance differs from source and is not assessed by IoU.",
+      "placement_changed_after_review": false
+    },
+    {
+      "candidate": "chair-seed-43",
+      "scene_sha256": "8f72899af5f2bacdf5697c5607414687dec29a415ece3ced8388eba43ba4c043",
+      "evidence": "review/evaluation-chair-seed-43.jpg",
+      "evidence_sha256": "e46196e86eefe933d30207714cd25ced876dcd875fc673604057bb2b13bda3ff",
+      "observations": "Correct entrance-side guest chair; strong overall silhouette overlap across three views, with remaining back profile, side outline and leg differences. Shared lighting/material appearance differs from source and is not assessed by IoU.",
+      "placement_changed_after_review": false
+    },
+    {
+      "candidate": "chair-seed-44",
+      "scene_sha256": "42a500508b1f2b80157dda19b3d2d59eba65f586114e61579014d8af676e9d30",
+      "evidence": "review/evaluation-chair-seed-44.jpg",
+      "evidence_sha256": "441f5af2bea81fb91f0b9aff6993d699e1edb99f0b702390d8ec7a712efd9822",
+      "observations": "Correct entrance-side guest chair; strong overall silhouette overlap across three views, with remaining back profile, side outline and leg differences. Shared lighting/material appearance differs from source and is not assessed by IoU.",
+      "placement_changed_after_review": false
+    }
+  ]
+}

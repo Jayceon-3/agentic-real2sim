@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "status": "frozen",
+  "protocol": {
+    "schema_version": 1,
+    "experiment_id": "office48-sam3d-ab-v1",
+    "video": "data/local/office48/source.mp4",
+    "video_sha256": "993af1f9c6a58d9df39a0d95309e4ed5fec489cce3d25a5d8c7b503827d0a724",
+    "scene": "outputs/office48-baseline-001/blender/furnished-v006/room.blend",
+    "camera": "outputs/office48-baseline-001/inputs/camera-v001/camera.npz",
+    "frames_dir": "outputs/office48-sam3d-ab/frames",
+    "image_size": [
+      1280,
+      720
+    ],
+    "frame_count": 303,
+    "fps": 30,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "objects": [
+      {
+        "id": "cabinet",
+        "instance_id": "furniture/cabinet",
+        "semantic_class": "furniture/storage",
+        "identity_review": "The target is the small floor cabinet beneath the rectangular wall clock, behind the desk, matched to furniture/cabinet. The wall-mounted cabinet and objects placed on top are excluded.",
+        "views": [
+          {
+            "role": "generation",
+            "frame": 302,
+            "mask": "outputs/office48-sam3d-ab/masks/cabinet-generation.png",
+            "reviewed": true
+          },
+          {
+            "role": "alignment",
+            "frame": 240,
+            "mask": "outputs/office48-sam3d-ab/masks/cabinet-alignment-1.png",
+            "reviewed": true
+          },
+          {
+            "role": "alignment",
+            "frame": 270,
+            "mask": "outputs/office48-sam3d-ab/masks/cabinet-alignment-2.png",
+            "reviewed": true
+          },
+          {
+            "role": "evaluation",
+            "frame": 210,
+            "mask": "outputs/office48-sam3d-ab/masks/cabinet-evaluation-1.png",
+            "reviewed": true
+          },
+          {
+            "role": "evaluation",
+            "frame": 255,
+            "mask": "outputs/office48-sam3d-ab/masks/cabinet-evaluation-2.png",
+            "reviewed": true
+          },
+          {
+            "role": "evaluation",
+            "frame": 285,
+            "mask": "outputs/office48-sam3d-ab/masks/cabinet-evaluation-3.png",
+            "reviewed": true
+          }
+        ]
+      },
+      {
+        "id": "chair",
+        "instance_id": "furniture/chair-guest-1",
+        "semantic_class": "furniture/chair",
+        "identity_review": "The target is the upholstered guest chair nearer the entrance, matched to furniture/chair-guest-1. In source frame 225 it is the larger foreground guest chair. The second guest chair and the operator chair are excluded.",
+        "views": [
+          {
+            "role": "generation",
+            "frame": 225,
+            "mask": "outputs/office48-sam3d-ab/masks/chair-generation.png",
+            "reviewed": true
+          },
+          {
+            "role": "alignment",
+            "frame": 0,
+            "mask": "outputs/office48-sam3d-ab/masks/chair-alignment-1.png",
+            "reviewed": true
+          },
+          {
+            "role": "alignment",
+            "frame": 270,
+            "mask": "outputs/office48-sam3d-ab/masks/chair-alignment-2.png",
+            "reviewed": true
+          },
+          {
+            "role": "evaluation",
+            "frame": 30,
+            "mask": "outputs/office48-sam3d-ab/masks/chair-evaluation-1.png",
+            "reviewed": true
+          },
+          {
+            "role": "evaluation",
+            "frame": 195,
+            "mask": "outputs/office48-sam3d-ab/masks/chair-evaluation-2.png",
+            "reviewed": true
+          },
+          {
+            "role": "evaluation",
+            "frame": 240,
+            "mask": "outputs/office48-sam3d-ab/masks/chair-evaluation-3.png",
+            "reviewed": true
+          }
+        ]
+      }
+    ]
+  },
+  "resources": {
+    "video": {
+      "path": "data/local/office48/source.mp4",
+      "sha256": "993af1f9c6a58d9df39a0d95309e4ed5fec489cce3d25a5d8c7b503827d0a724"
+    },
+    "scene": {
+      "path": "outputs/office48-baseline-001/blender/furnished-v006/room.blend",
+      "sha256": "0e4972419b0374b7f07e57be64f0a670f0f05f36f9e5f8e62f1e1b395210bf47"
+    },
+    "camera": {
+      "path": "outputs/office48-baseline-001/inputs/camera-v001/camera.npz",
+      "sha256": "3848ea776ff5a61d5fedf50d5f6a7829e27e8519efcd4f80a6fdcf6220f8666c"
+    }
+  },
+  "files": {
+    "inputs/cabinet/00-image.png": "2c7aa9c797ff41b9f35b711a4092ed3e089c738a41960b03715f64982c84df81",
+    "inputs/cabinet/00-mask.png": "0e72d8d9e57b51e8893a310bc704754404380668606468170fc171297d1176ee",
+    "inputs/cabinet/01-image.png": "db88ff66ee53188e3602e1265f15ac84b18df652c94384749bf3f6cb84f8247a",
+    "inputs/cabinet/01-mask.png": "c6f3d718bfb5028b7034eee0353b5674a57bb6639c2fdb78fc0d172168f2eef3",
+    "inputs/cabinet/02-image.png": "b7cf779cf892bc4fb91e31b7b4e1e1df5e4c09d8100d627bed4b154936693867",
+    "inputs/cabinet/02-mask.png": "6d7f6b70967f80a826fb078fe004d40db631370950819a15ff2cd9308e50cbd1",
+    "inputs/cabinet/03-image.png": "a521fc26fd206c88e704b28de9e4c40788508f9f2ba7157de0a5792ff0892d26",
+    "inputs/cabinet/03-mask.png": "8801c1319e8999514cba6f2f8dd2c2b558173ab4dea92ba97843d7f575aa2abd",
+    "inputs/cabinet/04-image.png": "d7acb7328320a023d8357910144f45de3c5e7158332534723e044bbbb857c1e6",
+    "inputs/cabinet/04-mask.png": "8e69dd65a6ba1bdbb765d6fa5c5405d40a696f403bd41fb6f8920ee58ad4c064",
+    "inputs/cabinet/05-image.png": "d6456f66b7ee4b2c572245e93caec85eee48812cfe936b998698f5916509fd5c",
+    "inputs/cabinet/05-mask.png": "66c2706c44d3dff942e0458dca4a02b14a7a01fd2249245fb25ca72f9c5e6484",
+    "inputs/chair/00-image.png": "03784d2ac2de358b37761a17c07b16c128c8a8204607263333ce78d8d262a1fc",
+    "inputs/chair/00-mask.png": "849ee8b6f3c78a4fb2bcfe8f5f114c346368aa5c757c44dc85abcb37e531a861",
+    "inputs/chair/01-image.png": "735f95a1a5ce3865d61c272b8a537c1e619ee52a288949c24864456ac02cf731",
+    "inputs/chair/01-mask.png": "fd043f1219007fbbe2b2b9c8e808fdb6581f086a080662687cb071434e35c209",
+    "inputs/chair/02-image.png": "b7cf779cf892bc4fb91e31b7b4e1e1df5e4c09d8100d627bed4b154936693867",
+    "inputs/chair/02-mask.png": "fef3914a196b2c44d242901c313dcaa6c2afb6b44c4e5a4b8ce1b7d2287e79fc",
+    "inputs/chair/03-image.png": "cd688699431ce09121f2b611add05a5314dae5385c300272008435ee6af8dad3",
+    "inputs/chair/03-mask.png": "3f4b2cbae59ee2e6fa75edb2ba9aee8c31685778d9cd262ab2bbb728d348563f",
+    "inputs/chair/04-image.png": "7dea82c469524bd674fe9608bd3e59dd9711c25535f995e148ba6ec4a04ee6a5",
+    "inputs/chair/04-mask.png": "f4b3cc8f93306db9bf55c62b9826a74cc207712579fe0677cc3e50476fcdedb1",
+    "inputs/chair/05-image.png": "db88ff66ee53188e3602e1265f15ac84b18df652c94384749bf3f6cb84f8247a",
+    "inputs/chair/05-mask.png": "199a7c00ecf4cc06f4aa4c9f21a6998dae509f89b9a8b08a806423952b7eebed"
+  },
+  "objects": [
+    {
+      "id": "cabinet",
+      "instance_id": "furniture/cabinet",
+      "semantic_class": "furniture/storage",
+      "identity_review": "The target is the small floor cabinet beneath the rectangular wall clock, behind the desk, matched to furniture/cabinet. The wall-mounted cabinet and objects placed on top are excluded.",
+      "views": [
+        {
+          "role": "generation",
+          "frame": 302,
+          "image": "inputs/cabinet/00-image.png",
+          "mask": "inputs/cabinet/00-mask.png"
+        },
+        {
+          "role": "alignment",
+          "frame": 240,
+          "image": "inputs/cabinet/01-image.png",
+          "mask": "inputs/cabinet/01-mask.png"
+        },
+        {
+          "role": "alignment",
+          "frame": 270,
+          "image": "inputs/cabinet/02-image.png",
+          "mask": "inputs/cabinet/02-mask.png"
+        },
+        {
+          "role": "evaluation",
+          "frame": 210,
+          "image": "inputs/cabinet/03-image.png",
+          "mask": "inputs/cabinet/03-mask.png"
+        },
+        {
+          "role": "evaluation",
+          "frame": 255,
+          "image": "inputs/cabinet/04-image.png",
+          "mask": "inputs/cabinet/04-mask.png"
+        },
+        {
+          "role": "evaluation",
+          "frame": 285,
+          "image": "inputs/cabinet/05-image.png",
+          "mask": "inputs/cabinet/05-mask.png"
+        }
+      ]
+    },
+    {
+      "id": "chair",
+      "instance_id": "furniture/chair-guest-1",
+      "semantic_class": "furniture/chair",
+      "identity_review": "The target is the upholstered guest chair nearer the entrance, matched to furniture/chair-guest-1. In source frame 225 it is the larger foreground guest chair. The second guest chair and the operator chair are excluded.",
+      "views": [
+        {
+          "role": "generation",
+          "frame": 225,
+          "image": "inputs/chair/00-image.png",
+          "mask": "inputs/chair/00-mask.png"
+        },
+        {
+          "role": "alignment",
+          "frame": 0,
+          "image": "inputs/chair/01-image.png",
+          "mask": "inputs/chair/01-mask.png"
+        },
+        {
+          "role": "alignment",
+          "frame": 270,
+          "image": "inputs/chair/02-image.png",
+          "mask": "inputs/chair/02-mask.png"
+        },
+        {
+          "role": "evaluation",
+          "frame": 30,
+          "image": "inputs/chair/03-image.png",
+          "mask": "inputs/chair/03-mask.png"
+        },
+        {
+          "role": "evaluation",
+          "frame": 195,
+          "image": "inputs/chair/04-image.png",
+          "mask": "inputs/chair/04-mask.png"
+        },
+        {
+          "role": "evaluation",
+          "frame": 240,
+          "image": "inputs/chair/05-image.png",
+          "mask": "inputs/chair/05-mask.png"
+        }
+      ]
+    }
+  ],
+  "manifest_sha256": "5d804768014ebb3435b5d63a9775efeaffdc76e88424ca9b7067ac122c10a00f",
+  "runner_sha256": "f2613a58e46bdf094aea43c4a2def04ac9d1832ea0d34cd2c8fb9115108ce6eb"
+}

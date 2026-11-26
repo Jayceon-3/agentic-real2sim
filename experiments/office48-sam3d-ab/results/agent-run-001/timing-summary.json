@@ -1,0 +1,7 @@
+{
+  "generation_batch_seconds": 423.3351313881576,
+  "selected_alignment_search_seconds_sum": 248.06733377099977,
+  "development_blender_batch_seconds": 255.0423805999999,
+  "evaluation_blender_batch_seconds": 294.95067560000007,
+  "scope": "Stage wall times may overlap with preparation. Failed/debug work is separately preserved in logs and operations.jsonl. Sum is not interactive-session end-to-end time."
+}

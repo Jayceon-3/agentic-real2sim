@@ -1,0 +1,14 @@
+{
+  "equal_pixels": true,
+  "different_values": 0,
+  "implicit_mean_rgb_on_object": [
+    111.98433669299918,
+    109.16276219013892,
+    107.31898665213838
+  ],
+  "explicit_mean_rgb_on_object": [
+    111.98433669299918,
+    109.16276219013892,
+    107.31898665213838
+  ]
+}
