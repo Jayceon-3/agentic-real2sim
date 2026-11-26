@@ -1,5 +1,10 @@
 # Experiments
 
+For the fixed-room Office48 A/B object comparison and the B-group resident SAM
+3D run, see [the protocol](office48-sam3d-ab/README.md). It has a separate frozen
+input and scoring workflow; its seed candidates are not unattended `EXP-*` agent
+runs or evidence of a completed baseline comparison.
+
 Each run of the real2sim agent is one experiment, with one folder `EXP-NNN-slug/`
 holding `record.md` (from `TEMPLATE.md`) and `env.json`. `index.csv` lists one
 row per experiment.
