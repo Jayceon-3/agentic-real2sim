@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "experiment_id": "office48-sam3d-ab-v1",
+  "video": "data/local/office48/source.mp4",
+  "video_sha256": "993af1f9c6a58d9df39a0d95309e4ed5fec489cce3d25a5d8c7b503827d0a724",
+  "scene": "outputs/office48-baseline-001/blender/furnished-v006/room.blend",
+  "camera": "outputs/office48-baseline-001/inputs/camera-v001/camera.npz",
+  "frames_dir": "outputs/office48-sam3d-ab/frames",
+  "image_size": [1280, 720],
+  "frame_count": 303,
+  "fps": 30,
+  "seeds": [42, 43, 44],
+  "objects": [
+    {
+      "id": "cabinet",
+      "instance_id": "furniture/cabinet",
+      "semantic_class": "furniture/storage",
+      "identity_review": "",
+      "views": [
+        {"role": "generation", "frame": null, "mask": "outputs/office48-sam3d-ab/masks/cabinet-generation.png", "reviewed": false},
+        {"role": "alignment", "frame": null, "mask": "outputs/office48-sam3d-ab/masks/cabinet-alignment-1.png", "reviewed": false},
+        {"role": "alignment", "frame": null, "mask": "outputs/office48-sam3d-ab/masks/cabinet-alignment-2.png", "reviewed": false},
+        {"role": "evaluation", "frame": null, "mask": "outputs/office48-sam3d-ab/masks/cabinet-evaluation-1.png", "reviewed": false},
+        {"role": "evaluation", "frame": null, "mask": "outputs/office48-sam3d-ab/masks/cabinet-evaluation-2.png", "reviewed": false},
+        {"role": "evaluation", "frame": null, "mask": "outputs/office48-sam3d-ab/masks/cabinet-evaluation-3.png", "reviewed": false}
+      ]
+    },
+    {
+      "id": "chair",
+      "instance_id": "furniture/chair-guest-1",
+      "semantic_class": "furniture/chair",
+      "identity_review": "",
+      "views": [
+        {"role": "generation", "frame": null, "mask": "outputs/office48-sam3d-ab/masks/chair-generation.png", "reviewed": false},
+        {"role": "alignment", "frame": null, "mask": "outputs/office48-sam3d-ab/masks/chair-alignment-1.png", "reviewed": false},
+        {"role": "alignment", "frame": null, "mask": "outputs/office48-sam3d-ab/masks/chair-alignment-2.png", "reviewed": false},
+        {"role": "evaluation", "frame": null, "mask": "outputs/office48-sam3d-ab/masks/chair-evaluation-1.png", "reviewed": false},
+        {"role": "evaluation", "frame": null, "mask": "outputs/office48-sam3d-ab/masks/chair-evaluation-2.png", "reviewed": false},
+        {"role": "evaluation", "frame": null, "mask": "outputs/office48-sam3d-ab/masks/chair-evaluation-3.png", "reviewed": false}
+      ]
+    }
+  ]
+}
