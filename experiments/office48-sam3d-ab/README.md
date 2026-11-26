@@ -228,7 +228,7 @@ python3 experiments/office48-sam3d-ab/run.py score \
   --out outputs/office48-sam3d-ab/metrics/cabinet-seed-42
 ```
 
-The renderer uses CPU Cycles, 32 samples, the saved room's source camera and the
+The renderer defaults to CPU Cycles, 32 samples, the saved room's source camera and the
 frozen raster. It checks all 303 camera poses/intrinsics against the cache. Source
 frame `n` maps to Blender frame `n+1`. RGB and binary Object Index masks come from
 the same render. Other objects remain present and occlude the target. Reference
@@ -237,6 +237,12 @@ RGB tone mapping. Inspect their behavior around glass/transparent surfaces;
 avoid interpreting reflections as target segmentation. Renderer settings must
 remain the same for A/B. Lighting/material edits to non-target objects are outside
 the experiment contract and require manual checking.
+
+For a configured NVIDIA workstation, `scene.py --stage render --device CUDA`
+uses the available CUDA device and records its name in `render.json`. Use the
+same device/settings for A and B. The November 26 agent continuation retains a
+CPU/CUDA mask comparison and uses CUDA for all production views; the existing
+CPU default remains available for other machines.
 
 B evaluation checks `experiment.json` and `import_report.json` beside the scene:
 the selected file must match the final import hash, object, seed and frozen lock.
@@ -314,3 +320,26 @@ was L-mode with values 0/255. Evidence is in the ignored
 `outputs/office48-sam3d-ab-smoke-004/` directory. Earlier smoke attempts are retained;
 they exposed Blender 5.2 compositor API changes that were corrected. No real GPU
 inference or selected Office48 evaluation was run as part of this validation.
+
+## Agent continuation of the six generated B assets
+
+The November 26, 2026 continuation is recorded locally under
+`outputs/office48-sam3d-ab/agent-run-001/`. Its run report, operation journal,
+placement-search traces, Blender console logs, immutable all-six scene selection,
+development/evaluation review images and per-view scores are retained there.
+The run uses supplied GLBs and reviewed masks; it is a staged B experiment,
+not six independent agent sessions or a completed A/B comparison. The existing
+common room and all non-target objects remain fixed. Search initialization uses
+the common room's original target bounds; a future A condition must receive
+those same layout priors and development masks.
+
+All six scene hashes are frozen before evaluation. Keep those scenes unchanged;
+evaluation findings belong to a subsequent development experiment. Static
+diagnostics distinguish a clean result from unresolved open-mesh volume checks.
+Refer to the run's `README.md` and `completion.json` for exact outcomes and limits.
+
+Compact [B results](results/agent-run-001/README.md) and historical
+[script snapshots](reproduction/agent-run-001/README.md) are archived in Git.
+Large artifacts and raw operation/console logs remain in the original ignored
+run directory and are distributed separately. Archive scripts require the
+original directory layout; they are not a portable command-line package.
