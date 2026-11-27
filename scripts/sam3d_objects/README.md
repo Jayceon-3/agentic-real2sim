@@ -18,6 +18,24 @@ It records both hashes and the substitution and never edits the external checkou
 Unknown entry-point layouts fail explicitly. Conda's CUDA toolkit crashed on the
 recorded machine; the cluster CUDA toolkit passed a minimal compilation test.
 
+## TUM rear-chair frame pair
+
+`run_pair.sh` retains the two-frame TUM `freiburg3_long_office_household`
+rear-chair invocation. From the repository root on an allocated Great Lakes GPU
+node, run:
+
+```bash
+bash scripts/sam3d_objects/run_pair.sh
+```
+
+Provide the separately stored `rear_chair_inputs/` bundle with `rgb.png`,
+`mask.png` and `source.json` under frames `1350/` and `1530/`. Each frame uses
+seed 42 and object ID `rear-wooden-chair`; outputs go to `results/FRAME/` inside
+the bundle. Existing result directories are refused by the wrapper; preserve
+earlier results before starting another run. Local bundles and their duplicate
+archives are ignored by Git. This TUM pair is separate from the Office48 A/B
+protocol.
+
 ## Inputs
 
 - `--image`: source RGB image. The original bytes are retained; inference uses RGB.

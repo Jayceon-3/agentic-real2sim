@@ -230,6 +230,16 @@ __marimo__/
 /outputs/
 /checkpoints/
 
+# Local SAM 3D experiment bundles and duplicate review archives
+/divider_inputs/
+/divider_inputs.zip
+/monitor_2_inputs/
+/monitor_2_inputs.zip
+/rear_chair_inputs/
+/rear_chair_inputs.zip
+/sam3-all-candidates-001/
+/sam3-all-candidates-review-001.tar.gz
+
 # Blender backups
 *.blend1
 *.blend2
