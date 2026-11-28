@@ -21,7 +21,8 @@ baseline or automatically replace furniture in an accepted scene.
 | [exp_container.sh](exp_container.sh) | Run a command (usually `codex exec`) in the `aha3d-exp` container with only the worktree and records writable | Docker with GPU; image from `../docker/` |
 | [codex_session_stats.py](codex_session_stats.py) | Sum tokens, time and API-equivalent cost over Codex session logs | Python standard library |
 | [tum_contact_sheet.py](tum_contact_sheet.py), [tum_to_mp4.py](tum_to_mp4.py) | Pick a TUM RGB-D clip and write it as mp4 plus a frame/timestamp map | OpenCV |
-| [eval_pi3x_tum_ate.py](eval_pi3x_tum_ate.py) | Pi3X camera ATE and Sim(3) scale against TUM ground truth | NumPy |
+| [audit_blender_placement.py](audit_blender_placement.py) | Audit object dimensions, world transform and support clearance with an optional controlled correction | Background Blender or `bpy` |
+| [eval_pi3x_tum_ate.py](eval_pi3x_tum_ate.py) | Compare rigid and similarity camera alignment against TUM ground truth, with optional held-out evaluation | NumPy |
 | Existing `*office48*.py` files below | Historical Office48 baseline authoring and review | See table |
 
 The existing Office48 entry points remain at their original paths because scripts,
@@ -45,6 +46,8 @@ scripts without updating their root discovery, imports and provenance references
 The historical invocation details live in
 [BUILDING.md](../experiments/office48-baseline-001/BUILDING.md) and
 [PREDELIVERY.md](../experiments/office48-baseline-001/PREDELIVERY.md).
+The placement audit and TUM trajectory scale commands are recorded in the
+[Task 4 experiment](../experiments/task4-scale-audit/README.md).
 
 ## SAM 3D Objects
 

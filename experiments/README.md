@@ -5,6 +5,9 @@ For the fixed-room Office48 A/B object comparison and the B-group resident SAM
 input and scoring workflow; its seed candidates are not unattended `EXP-*` agent
 runs or evidence of a completed baseline comparison.
 
+The [Task 4 scale audit](task4-scale-audit/README.md) documents coordinate
+conventions and records controlled Office48 object and TUM trajectory checks.
+
 Each run of the real2sim agent is one experiment, with one folder `EXP-NNN-slug/`
 holding `record.md` (from `TEMPLATE.md`) and `env.json`. `index.csv` lists one
 row per experiment.

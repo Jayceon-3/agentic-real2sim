@@ -100,8 +100,10 @@ def extract(args):
     try:
         for frame in sorted(set(args.frames)):
             path = args.out / frame_name(frame)
+            # Start each single-image output at timestamp zero after selecting the source frame.
+            select_frame = f"select=eq(n\\,{frame}),setpts=PTS-STARTPTS"
             command = [args.ffmpeg, "-nostdin", "-v", "error", "-i", str(video),
-                       "-vf", f"select=eq(n\\,{frame})", "-vsync", "0", "-frames:v", "1", str(path)]
+                       "-vf", select_frame, "-frames:v", "1", str(path)]
             subprocess.run(command, check=True)
             with Image.open(path) as image:
                 if image.size != (1280, 720):
@@ -121,8 +123,9 @@ def extract(args):
 def freeze(args):
     config = read(args.manifest)
     validate_manifest(config)
-    resources = {key: {"path": source(args.root, config[key]).relative_to(args.root).as_posix(),
-                       "sha256": digest(source(args.root, config[key]))}
+    root = args.root.resolve()
+    resources = {key: {"path": source(root, config[key]).relative_to(root).as_posix(),
+                       "sha256": digest(source(root, config[key]))}
                  for key in ("video", "scene", "camera")}
     if resources["video"]["sha256"] != config["video_sha256"]:
         raise ValueError("Video differs from the preregistered Office48 input")

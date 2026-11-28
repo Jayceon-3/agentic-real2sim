@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "max_match_delta_seconds": 0.02,
+  "matched_camera_count": 24,
+  "reference_path_m": 19.517523420467406,
+  "fit_source_frames": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22
+  ],
+  "evaluation_source_frames": [
+    1,
+    3,
+    5,
+    7,
+    9,
+    11,
+    13,
+    15,
+    17,
+    19,
+    21,
+    23
+  ],
+  "evaluation_is_holdout": true,
+  "gt_from_estimated_scale": 0.9259259259259259,
+  "estimated_scale_error_percent": 8.000000000000007,
+  "gt_from_estimated_rotation": [
+    [
+      0.9205048534524404,
+      0.39073112848927355,
+      -2.0378829570970018e-17
+    ],
+    [
+      -0.3907311284892739,
+      0.9205048534524397,
+      -3.251191306432089e-17
+    ],
+    [
+      6.714153047458397e-19,
+      3.9179754234113165e-19,
+      1.0
+    ]
+  ],
+  "rigid_ate": {
+    "translation_m": [
+      0.041832703796351955,
+      0.45213274308478607,
+      -0.417694
+    ],
+    "rmse_m": 0.16886147742388619,
+    "median_m": 0.16907281604025048,
+    "max_m": 0.2231684649994762
+  },
+  "similarity_ate": {
+    "translation_m": [
+      -0.0076592248799209894,
+      0.45590130532541917,
+      -0.2777777777777779
+    ],
+    "rmse_m": 8.533052878706431e-16,
+    "median_m": 8.123085304795774e-16,
+    "max_m": 1.4306915617612184e-15
+  },
+  "inputs": {
+    "cameras": {
+      "path": "outputs/task4-scale-audit/tum-control-001/cameras.json",
+      "sha256": "ea5308a500fbf819030207698061f66b74f903b0d0e63b1ba1b8366d3fe8c2fa"
+    },
+    "frame_map": {
+      "path": "outputs/task4-scale-audit/tum-control-001/frames.json",
+      "sha256": "6cfe5f7e84bef2a04841324c77430eff93aa76112eca8ab8a9906afa823ed5ff"
+    },
+    "ground_truth": {
+      "path": "data/local/tum/freiburg3_long_office_household-groundtruth.txt",
+      "sha256": "e255d5d9c5bab915132c7ac5ec4e23f9f1efe98f765b0c9b26ac74e40b02533f"
+    }
+  }
+}
