@@ -1,0 +1,369 @@
+{
+  "schema_version": 1,
+  "sequence": "freiburg3_long_office_household",
+  "clip_rgb_index_range": [
+    1350,
+    2100
+  ],
+  "clip_rgb_index_end_exclusive": true,
+  "historical_evaluator_revision": "465cd037",
+  "historical_evaluator_stdout": [
+    "matched 32 cameras | GT path 6.59 m | Sim3 scale (GT/Pi3X) 1.091",
+    "ATE RMSE 1.1 cm | median 0.9 cm | max 2.4 cm"
+  ],
+  "rgb_index_source": {
+    "url": "https://huggingface.co/datasets/voviktyl/TUM_RGBD-SLAM/resolve/main/rgbd_dataset_freiburg3_long_office_household/rgb.txt",
+    "sha256": "9bc53b49d65090bf7fe519123a7c1d0561c53672576d781a81b63088765c15dd"
+  },
+  "ground_truth": {
+    "path": "data/local/tum/freiburg3_long_office_household-groundtruth.txt",
+    "sha256": "e255d5d9c5bab915132c7ac5ec4e23f9f1efe98f765b0c9b26ac74e40b02533f"
+  },
+  "reconstructed_frame_map": {
+    "path": "outputs/task4-scale-audit/tum-historical-001/frames.json",
+    "sha256": "a8f039dcad089821b1240de37b10bba5ee74b819753cf90920fad30f5d58f9bd"
+  },
+  "camera_sources": {
+    "exp002-pi3x": {
+      "path": "experiments/EXP-002-baseline-tum-office-auto/worktree_outputs/runs/tum_office/reference32/pi3x/cameras.json",
+      "sha256": "b062cf36bf8a0e6d30563f3506cf0a902418d871af1b630909505842b05cd143"
+    },
+    "exp002-alignment": {
+      "path": "experiments/EXP-002-baseline-tum-office-auto/worktree_outputs/runs/tum_office/reference32/alignment/cameras.json",
+      "sha256": "6b74d9b539335a2f7097fadefd2c6e35ec0268e27f62da4e2f176b055ff252fa"
+    },
+    "exp003-pi3x": {
+      "path": "experiments/EXP-003-baseline-tum-office-auto-r2/worktree_outputs/runs/tum_office/whitebox/reference/pi3x/cameras.json",
+      "sha256": "b062cf36bf8a0e6d30563f3506cf0a902418d871af1b630909505842b05cd143"
+    },
+    "exp003-alignment": {
+      "path": "experiments/EXP-003-baseline-tum-office-auto-r2/worktree_outputs/runs/tum_office/whitebox/reference/alignment/cameras.json",
+      "sha256": "6b74d9b539335a2f7097fadefd2c6e35ec0268e27f62da4e2f176b055ff252fa"
+    }
+  },
+  "exp002_and_exp003_camera_exports_byte_identical": true,
+  "exp002_and_exp003_predictions_sha256": "a630f0261e8e72ec7ec0dabfe62b6e14de0d6d5dc363ecf1d1d6852ae0f8a996",
+  "camera_transform_audit": {
+    "raw_to_pi3x_export_max_matrix_error": 0.0,
+    "pi3x_to_alignment_export_max_matrix_error": 8.881784197001252e-16,
+    "pi3x_world_basis_singular_values": [
+      1.0000000139467293,
+      0.9999999619325677,
+      0.9999999557577959
+    ],
+    "alignment_world_basis_singular_values": [
+      1.0000000019347102,
+      1.0,
+      0.9999999999999997
+    ]
+  },
+  "fits": {
+    "pi3x": {
+      "max_match_delta_seconds": 0.02,
+      "matched_camera_count": 32,
+      "reference_path_m": 6.589277516067241,
+      "fit_source_frames": [
+        0,
+        24,
+        48,
+        72,
+        97,
+        121,
+        145,
+        169,
+        193,
+        217,
+        242,
+        266,
+        290,
+        314,
+        338,
+        362,
+        387,
+        411,
+        435,
+        459,
+        483,
+        507,
+        532,
+        556,
+        580,
+        604,
+        628,
+        652,
+        677,
+        701,
+        725,
+        749
+      ],
+      "evaluation_source_frames": [
+        0,
+        24,
+        48,
+        72,
+        97,
+        121,
+        145,
+        169,
+        193,
+        217,
+        242,
+        266,
+        290,
+        314,
+        338,
+        362,
+        387,
+        411,
+        435,
+        459,
+        483,
+        507,
+        532,
+        556,
+        580,
+        604,
+        628,
+        652,
+        677,
+        701,
+        725,
+        749
+      ],
+      "evaluation_is_holdout": false,
+      "gt_from_estimated_scale": 1.0906903560137582,
+      "estimated_scale_error_percent": -8.314949840137231,
+      "gt_from_estimated_rotation": [
+        [
+          0.5913040794479625,
+          0.8064443499735919,
+          -0.0026449997860523065
+        ],
+        [
+          -0.8063879060319071,
+          0.5912966004560296,
+          0.01033805081329599
+        ],
+        [
+          0.009901042049822168,
+          -0.003980035780512634,
+          0.9999430627198299
+        ]
+      ],
+      "rigid_ate": {
+        "translation_m": [
+          -2.0834297314561288,
+          -1.2788252447075492,
+          0.10164864724077693
+        ],
+        "rmse_m": 0.11619511892739988,
+        "median_m": 0.10337366676996018,
+        "max_m": 0.1863025230117616
+      },
+      "similarity_ate": {
+        "translation_m": [
+          -2.0709525846028893,
+          -1.454578358929664,
+          -0.017727191062348435
+        ],
+        "rmse_m": 0.011109982177047438,
+        "median_m": 0.008803137589503744,
+        "max_m": 0.023655032552927217
+      }
+    },
+    "alignment": {
+      "max_match_delta_seconds": 0.02,
+      "matched_camera_count": 32,
+      "reference_path_m": 6.589277516067241,
+      "fit_source_frames": [
+        0,
+        24,
+        48,
+        72,
+        97,
+        121,
+        145,
+        169,
+        193,
+        217,
+        242,
+        266,
+        290,
+        314,
+        338,
+        362,
+        387,
+        411,
+        435,
+        459,
+        483,
+        507,
+        532,
+        556,
+        580,
+        604,
+        628,
+        652,
+        677,
+        701,
+        725,
+        749
+      ],
+      "evaluation_source_frames": [
+        0,
+        24,
+        48,
+        72,
+        97,
+        121,
+        145,
+        169,
+        193,
+        217,
+        242,
+        266,
+        290,
+        314,
+        338,
+        362,
+        387,
+        411,
+        435,
+        459,
+        483,
+        507,
+        532,
+        556,
+        580,
+        604,
+        628,
+        652,
+        677,
+        701,
+        725,
+        749
+      ],
+      "evaluation_is_holdout": false,
+      "gt_from_estimated_scale": 1.090690313767293,
+      "estimated_scale_error_percent": -8.314946288836522,
+      "gt_from_estimated_rotation": [
+        [
+          0.9998281408681049,
+          -0.01649224197862897,
+          -0.00846727126929903
+        ],
+        [
+          0.016642183462368246,
+          0.9997002949751244,
+          0.01795432973558859
+        ],
+        [
+          0.00816862643498921,
+          -0.018092158001955797,
+          0.9998029542669887
+        ]
+      ],
+      "rigid_ate": {
+        "translation_m": [
+          -2.076080116881024,
+          -1.2883604642002746,
+          0.11334120834012151
+        ],
+        "rmse_m": 0.11619506976535925,
+        "median_m": 0.10337362742025766,
+        "max_m": 0.18630243679296576
+      },
+      "similarity_ate": {
+        "translation_m": [
+          -2.0629364369881533,
+          -1.4649782485986091,
+          -0.004974172319081704
+        ],
+        "rmse_m": 0.011109982292842737,
+        "median_m": 0.008803136538669883,
+        "max_m": 0.023655032806136993
+      }
+    },
+    "pi3x_holdout": {
+      "max_match_delta_seconds": 0.02,
+      "matched_camera_count": 32,
+      "reference_path_m": 6.589277516067241,
+      "fit_source_frames": [
+        0,
+        48,
+        97,
+        145,
+        193,
+        242,
+        290,
+        338,
+        387,
+        435,
+        483,
+        532,
+        580,
+        628,
+        677,
+        725
+      ],
+      "evaluation_source_frames": [
+        24,
+        72,
+        121,
+        169,
+        217,
+        266,
+        314,
+        362,
+        411,
+        459,
+        507,
+        556,
+        604,
+        652,
+        701,
+        749
+      ],
+      "evaluation_is_holdout": true,
+      "gt_from_estimated_scale": 1.0902272179623065,
+      "estimated_scale_error_percent": -8.276001229445185,
+      "gt_from_estimated_rotation": [
+        [
+          0.5909186553531468,
+          0.8067274132015942,
+          -0.0024542910776303994
+        ],
+        [
+          -0.8066715915955189,
+          0.5909092635345011,
+          0.010353046984624612
+        ],
+        [
+          0.009802350145842647,
+          -0.004138001713131535,
+          0.9999433938345915
+        ]
+      ],
+      "rigid_ate": {
+        "translation_m": [
+          -2.088367082207416,
+          -1.2826750821297161,
+          0.10123174798414891
+        ],
+        "rmse_m": 0.11731812336059984,
+        "median_m": 0.10389943547965555,
+        "max_m": 0.1914319199949916
+      },
+      "similarity_ate": {
+        "translation_m": [
+          -2.073538652375138,
+          -1.4535299133935877,
+          -0.017793697339552494
+        ],
+        "rmse_m": 0.01164864668323657,
+        "median_m": 0.006964235434474227,
+        "max_m": 0.02493538696058452
+      }
+    }
+  }
+}

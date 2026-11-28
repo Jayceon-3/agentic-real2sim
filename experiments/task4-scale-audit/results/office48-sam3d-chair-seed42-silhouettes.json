@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "object": "furniture/chair-guest-1",
+  "seed": 42,
+  "host": "Apple M4 MacBook Air",
+  "aha3d_revision": "82f4b1110cfe4b55fff19df3b3790852ce07b171",
+  "geometry_audit_sha256": "1219dcaeacf43099b0b78d5425c502200e9afcb946fb07a7dd7907d87fe026b4",
+  "glb_sha256": "50cd21a4d65e0f2e225b74d1f0ff205b1a7ead1b203ae2da6bd5294941c1c457",
+  "frozen_input_lock_sha256": "3ddca3bfe840d75e1c01369fe19ac9b5ad139feacd134df3a4f84268d01aa36f",
+  "settings": {
+    "blender_version": "5.2.1 LTS",
+    "engine": "CYCLES",
+    "device": "CPU",
+    "samples": 32,
+    "camera_check": {
+      "frames_checked": 303,
+      "maximum_c2w_element_error": 4.902082280655584e-07,
+      "maximum_K_element_error_px": 1.0798397972470184,
+      "pixel_aspect_policy": "fixed median fx/fy; keyed lens and shifts",
+      "pixel_aspect_xy": [
+        1.0,
+        1.001308798789978
+      ]
+    }
+  },
+  "evaluation_source_frames": [
+    30,
+    195,
+    240
+  ],
+  "original_matches_historical_per_view_iou": true,
+  "conditions": {
+    "original": {
+      "scene_sha256": "057f830499136ff2ff65bdac630e4b9281af1eae83376e97b1c0fb1962f5c083",
+      "render_sha256": "9d7302655a661a8c03c1c6e1c6a537cb279a989c993bf140f8b9c5d4373ad54f",
+      "score_sha256": "663450a19781252e6d12e1e1ca77bf06438801b97b5f8e6b02c0320256d25581",
+      "render_wall_seconds": 35.75796541699674,
+      "mean_iou": 0.8783121237171229,
+      "views": [
+        {
+          "frame": 30,
+          "intersection": 16107,
+          "union": 18343,
+          "iou": 0.8781006378454996,
+          "rendered_mask_sha256": "5ab9e8838aae57b80512c16253019539e822c34652efa60680c7c625a3375988"
+        },
+        {
+          "frame": 195,
+          "intersection": 35260,
+          "union": 38812,
+          "iou": 0.908481912810471,
+          "rendered_mask_sha256": "96d8b9109ec672f5ad42b55474f3c74488210b1810b20bbbd80b189f67623d99"
+        },
+        {
+          "frame": 240,
+          "intersection": 68670,
+          "union": 80945,
+          "iou": 0.8483538204953981,
+          "rendered_mask_sha256": "c888f0728881c75875577986570c1c19e91cd12d627ddb1ce96c2ee000741162"
+        }
+      ]
+    },
+    "perturbed": {
+      "scene_sha256": "90fbed44ec7479822bc55107cbc91c7a272a1ce1fc960cb34e8eeeb765e298d6",
+      "render_sha256": "9a37526cc86b2a84d3e5a6279bb9365cf74bc13b0c43e757d93e55129447dd96",
+      "score_sha256": "b8da575afdba23561a5f4ed6a3d40289f57b77bad7fc9726559dc699633b8d91",
+      "render_wall_seconds": 41.3407925410429,
+      "mean_iou": 0.4714764264633798,
+      "views": [
+        {
+          "frame": 30,
+          "intersection": 13545,
+          "union": 28369,
+          "iou": 0.47745778843103387,
+          "rendered_mask_sha256": "2227d58c26a6f3004fe9857062434042b6812b5e71c923e9839147cfea2da79e"
+        },
+        {
+          "frame": 195,
+          "intersection": 25564,
+          "union": 56760,
+          "iou": 0.4503875968992248,
+          "rendered_mask_sha256": "5701e8ed8cf4965d6e1ad1aac5e82e1587cbbbea2b3ea242b054a55cf55394de"
+        },
+        {
+          "frame": 240,
+          "intersection": 58864,
+          "union": 120974,
+          "iou": 0.4865838940598806,
+          "rendered_mask_sha256": "2364331e5e5527a6a0f164f84bfbc87374a7e929e22dfb40d6c3a72afc66f6b8"
+        }
+      ],
+      "import_stage_seconds": {
+        "open_scene": 0.03451991593465209,
+        "import_glb": 0.2298538750037551,
+        "placement": 0.018714166013523936,
+        "save_scene": 0.0646341668907553,
+        "reopen_check": 0.08368366595823318,
+        "total": 0.44577200000640005
+      },
+      "placement": {
+        "schema_version": 1,
+        "coordinate_space": "blender_imported_to_scene_world",
+        "translation_m": [
+          -0.2440413534641266,
+          2.3721237182617188,
+          0.6016781330108643
+        ],
+        "rotation_euler_xyz_deg": [
+          0.0,
+          0.0,
+          -94.12543066300097
+        ],
+        "scale": [
+          0.9691005894862569,
+          0.9691005894862569,
+          0.9691005894862569
+        ],
+        "semantic_class": "furniture/chair",
+        "note": "Controlled Task 4 placement derived from the archived chair audit."
+      }
+    },
+    "corrected": {
+      "scene_sha256": "a777e549f6deefbdd0f1bf5de085aae93eb138b2c5ea4fdcb738a19819e91ff4",
+      "render_sha256": "83bfe4e540c3896566d9685ff0dc3596e39500be5e7d87dee48b878e4ef97888",
+      "score_sha256": "cbe75611da454b5728c4bdced73385f5c55825527de51c0e9c0356dbb2899687",
+      "render_wall_seconds": 38.649901457945816,
+      "mean_iou": 0.8783121237171229,
+      "views": [
+        {
+          "frame": 30,
+          "intersection": 16107,
+          "union": 18343,
+          "iou": 0.8781006378454996,
+          "rendered_mask_sha256": "cf61f12f427bf206364ec653a2ae47fcb1f76f7b1260ce3cb311dafe736d6d8f"
+        },
+        {
+          "frame": 195,
+          "intersection": 35260,
+          "union": 38812,
+          "iou": 0.908481912810471,
+          "rendered_mask_sha256": "6db430c65b16b9606aefd5ade0d598c102e8d68539071a9bf4cfa239c51b7048"
+        },
+        {
+          "frame": 240,
+          "intersection": 68670,
+          "union": 80945,
+          "iou": 0.8483538204953981,
+          "rendered_mask_sha256": "0ef309465210ea860816ed0d98c621a4521999b02c5b2a0bb450c0b8189f5881"
+        }
+      ],
+      "import_stage_seconds": {
+        "open_scene": 0.03598758298903704,
+        "import_glb": 0.2301223750691861,
+        "placement": 0.020846124971285462,
+        "save_scene": 0.0671154169831425,
+        "reopen_check": 0.08517054095864296,
+        "total": 0.45363708306103945
+      },
+      "placement": {
+        "schema_version": 1,
+        "coordinate_space": "blender_imported_to_scene_world",
+        "translation_m": [
+          -0.2440413534641266,
+          2.3721237182617188,
+          0.4657799005508423
+        ],
+        "rotation_euler_xyz_deg": [
+          0.0,
+          0.0,
+          -94.12543066300097
+        ],
+        "scale": [
+          0.8973153782911033,
+          0.8973153782911033,
+          0.8973153782911033
+        ],
+        "semantic_class": "furniture/chair",
+        "note": "Controlled Task 4 placement derived from the archived chair audit."
+      }
+    }
+  },
+  "mean_iou_gain_from_correction": 0.4068356972537431
+}
