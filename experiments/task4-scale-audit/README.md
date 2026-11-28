@@ -14,35 +14,22 @@ checks the scale convention on held-out motion-capture camera centers.
 
 ## Runtime and inputs
 
-Run these commands from the repository root in Bash. The Task 4
-[`pyproject.toml`](pyproject.toml) defines an `analysis` group for TUM
-trajectory evaluation and Office48 mask scoring. Install it into
-`eecs545_env` with pip 25.1 or newer. If the Conda environment does not
-exist, create it with `conda create -n eecs545_env python=3.11 'pip>=25.1'`.
-If the existing environment has an older pip, update it with
-`conda install -n eecs545_env 'pip>=25.1'`.
+On an Apple Silicon Mac, install Pixi 0.85 or newer. Pixi is the only runtime
+bootstrap tool. The [Task 4 manifest](pixi.toml) provisions Python 3.13, the
+Blender 5.2.1 Python module, the pinned public AHa-3D package, NumPy, Pillow and
+the command-line tools used below. The [lock file](pixi.lock) records the exact
+resolved packages. [Install Pixi](https://pixi.sh/latest/installation/)
 
 ```bash
-task4_config=./experiments/task4-scale-audit/pyproject.toml
-conda run -n eecs545_env python -m pip install --no-user --group "${task4_config}:analysis"
+# From the repository root.
+pixi install --locked --manifest-path experiments/task4-scale-audit/pixi.toml
+pixi shell --locked --manifest-path experiments/task4-scale-audit/pixi.toml
 ```
 
-For the Office48 team-chair audit and rendering loop, install the `blender`
-group into a separate Python 3.13 virtual environment. This group includes
-the analysis dependencies and Blender's `bpy==5.2.1` wheel, available on
-Apple Silicon Macs. The placement commands also use the external `jq`
-executable. Set `BLENDER_BIN` for the optional public whitebox smoke test.
-The Mac reproduction used archived model outputs and Cycles on CPU.
-[Blender wheel compatibility](https://pypi.org/project/bpy/5.2.1/#files)
-
-```bash
-tools_dir="$PWD/outputs/task4-scale-audit/runtime"
-mkdir -p "$tools_dir"
-python3.13 -m venv "$tools_dir/blender-python"
-export BLENDER_PY="$tools_dir/blender-python/bin/python"
-"$BLENDER_PY" -m pip install 'pip>=25.1'
-"$BLENDER_PY" -m pip install --group "${task4_config}:blender"
-```
+Run the remaining commands from the repository root inside this shell. The
+environment is scoped to Task 4 and supplies Blender without a separate app
+installation. The experiments reuse archived inference results and render with
+Cycles on CPU.
 
 Use distinct output directories or report filenames for each run. Store the
 shared Office48 bundle and TUM EXP archives locally. The extracted scenes,
@@ -84,22 +71,16 @@ team scene. Use the existing B-run files and visible source masks to measure tha
 target. Its mesh and the original baseline scene are distributed separately.
 [Public Office48 scene](https://github.com/KevinXu02/aha-3d/blob/main/examples/office48/whitebox.blend) · [Team input lock](../office48-sam3d-ab/results/agent-run-001/input-lock.json) · [B-run artifact notes](../office48-sam3d-ab/results/agent-run-001/README.md)
 
-Run from the repository root with Blender 5.2. On macOS set `BLENDER_BIN` to the
-executable inside the app bundle, for example
-`/Applications/Blender.app/Contents/MacOS/Blender`. An isolated Python 3.13
-runtime with the official `bpy==5.2.1` module also works. In that case use
-`"$BLENDER_PY" scripts/audit_blender_placement.py` followed by the same script
-arguments. Use a new JSON output path for each run. Data and generated files
-belong under the existing ignored directories.
+Use a new JSON output path for each run. Data and generated files belong under
+the existing ignored directories.
 
 ```bash
 mkdir -p outputs/task4-dev outputs/task4-scale-audit
 curl -fL https://raw.githubusercontent.com/KevinXu02/aha-3d/main/examples/office48/whitebox.blend \
   -o outputs/task4-dev/whitebox.blend
-shasum -a 256 outputs/task4-dev/whitebox.blend
+sha256sum outputs/task4-dev/whitebox.blend
 
-conda run -n eecs545_env "$BLENDER_BIN" --background --python-exit-code 1 \
-  --python scripts/audit_blender_placement.py -- \
+python -B scripts/audit_blender_placement.py \
   --scene outputs/task4-dev/whitebox.blend \
   --object furniture/guest_chair_0 --support furniture/rug \
   --demo --scale-factor 1.08 --lift-z 0.10 --eval-blender-frames 31 196 241 \
@@ -167,14 +148,14 @@ ab=outputs/office48-sam3d-ab
 placed="$ab/agent-run-001/scenes/chair-seed-42-final/scene.blend"
 out=outputs/task4-scale-audit/office48-sam3d-chair-seed42-rerun
 mkdir -p "$out"
-shasum -a 256 -c <<EOF
+sha256sum -c <<EOF
 993af1f9c6a58d9df39a0d95309e4ed5fec489cce3d25a5d8c7b503827d0a724  $video
 057f830499136ff2ff65bdac630e4b9281af1eae83376e97b1c0fb1962f5c083  $placed
 50cd21a4d65e0f2e225b74d1f0ff205b1a7ead1b203ae2da6bd5294941c1c457  $ab/generation-001/chair/seed-42/object.glb
 3ddca3bfe840d75e1c01369fe19ac9b5ad139feacd134df3a4f84268d01aa36f  $ab/frozen-v1/lock.json
 EOF
 
-conda run -n eecs545_env "$BLENDER_PY" -B scripts/audit_blender_placement.py \
+python -B scripts/audit_blender_placement.py \
   --scene "$placed" --object furniture/chair-guest-1 \
   --support architecture/floor --demo --scale-factor 1.08 --lift-z 0.10 \
   --eval-blender-frames 31 196 241 --out "$out/audit.json"
@@ -205,29 +186,19 @@ require independent physical measurements. [Audit JSON](results/office48-sam3d-c
 For silhouette verification, create the perturbed and corrected placements
 from the audit, import the same GLB into the locked baseline for each, and
 render all three candidates with the same settings. The locked scorer applies
-the source masks and ignore regions at source frames 30, 195 and 240. Use the
-repository's AHa-3D checkout when available. The Mac reproduction used the
-public AHa-3D revision `82f4b1110cfe4b55fff19df3b3790852ce07b171` for the
-Blender semantics and camera check because the pinned revision was unavailable.
-If `third_party/aha-3d` is uninitialized, use a separate public checkout for
-the tested fallback.
+the source masks and ignore regions at source frames 30, 195 and 240. The
+render/import command loads the AHa-3D package from the Task 4 environment.
+Its public revision `82f4b1110cfe4b55fff19df3b3790852ce07b171` matches the
+reproduction's Blender semantics and camera check.
 
 ```bash
-git clone --filter=blob:none --no-checkout https://github.com/KevinXu02/aha-3d.git "$tools_dir/aha3d-public"
-git -C "$tools_dir/aha3d-public" sparse-checkout set src/aha3d
-git -C "$tools_dir/aha3d-public" checkout --detach 82f4b1110cfe4b55fff19df3b3790852ce07b171
-export PYTHONPATH="$tools_dir/aha3d-public/src"
-```
-
-```bash
-# BLENDER_PY is the Python 3.13 executable with bpy 5.2.1.
 # Reuse ab, placed and out from the audit command above.
 lock="$ab/frozen-v1/lock.json"
 glb="$ab/generation-001/chair/seed-42/object.glb"
 placement=experiments/office48-sam3d-ab/results/agent-run-001/placements/chair-seed-42.json
 blender_stage() {
-  conda run -n eecs545_env "$BLENDER_PY" -Bc \
-    'import bpy, runpy; bpy.context.preferences.filepaths.use_scripts_auto_execute = False; runpy.run_path("experiments/office48-sam3d-ab/scene.py", run_name="__main__")' \
+  python -IBc \
+    'import aha3d, bpy, runpy; bpy.context.preferences.filepaths.use_scripts_auto_execute = False; runpy.run_path("experiments/office48-sam3d-ab/scene.py", run_name="__main__")' \
     -- "$@"
 }
 for variant in original perturbed corrected; do
@@ -249,7 +220,7 @@ for variant in original perturbed corrected; do
   blender_stage --stage render --object chair --lock "$lock" --label B-seed-42 \
     --role evaluation --scene "$candidate" --samples 32 --device CPU \
     --out "$out/$variant-renders"
-  conda run -n eecs545_env python -B experiments/office48-sam3d-ab/run.py score \
+  python -B experiments/office48-sam3d-ab/run.py score \
     --lock "$lock" --renders "$out/$variant-renders" --out "$out/$variant-score"
 done
 ```
@@ -327,12 +298,12 @@ curl -fL https://huggingface.co/datasets/voviktyl/TUM_RGBD-SLAM/resolve/main/rgb
   -o "$rgb"
 curl -fL https://webshare.cvg.tum.de/rgbd/dataset/freiburg3/rgbd_dataset_freiburg3_long_office_household-groundtruth.txt \
   -o "$truth"
-shasum -a 256 -c <<EOF
+sha256sum -c <<EOF
 9bc53b49d65090bf7fe519123a7c1d0561c53672576d781a81b63088765c15dd  $rgb
 e255d5d9c5bab915132c7ac5ec4e23f9f1efe98f765b0c9b26ac74e40b02533f  $truth
 EOF
 
-conda run --no-capture-output -n eecs545_env python -B - "$rgb" "$work/frames.json" <<'PY'
+python -B - "$rgb" "$work/frames.json" <<'PY'
 import json
 from pathlib import Path
 import sys
@@ -357,12 +328,12 @@ for run in exp002 exp003; do
   if [ "$run" = exp003 ]; then root="$exp003"; fi
   for stage in pi3x alignment; do
     camera="$root/$stage/cameras.json"
-    conda run -n eecs545_env python "$work/historical-evaluator.py" "$camera" "$work/frames.json" "$truth"
-    conda run -n eecs545_env python scripts/eval_pi3x_tum_ate.py \
+    python -B "$work/historical-evaluator.py" "$camera" "$work/frames.json" "$truth"
+    python -B scripts/eval_pi3x_tum_ate.py \
       "$camera" "$work/frames.json" "$truth" --out "$work/$run-$stage.json"
   done
 done
-conda run -n eecs545_env python scripts/eval_pi3x_tum_ate.py \
+python -B scripts/eval_pi3x_tum_ate.py \
   "$exp002/pi3x/cameras.json" "$work/frames.json" "$truth" \
   --holdout-every 2 --out "$work/exp002-pi3x-holdout.json"
 ```
@@ -371,7 +342,7 @@ Check the raw-to-export transform and the scale of both world bases using
 the same camera archives.
 
 ```bash
-conda run --no-capture-output -n eecs545_env python -B - "$exp002" <<'PY'
+python -B - "$exp002" <<'PY'
 import json
 from pathlib import Path
 import sys
@@ -413,10 +384,10 @@ mkdir -p data/local/tum outputs/task4-scale-audit
 curl -fL https://webshare.cvg.cit.tum.de/g/rgbd/dataset/freiburg3/rgbd_dataset_freiburg3_long_office_household-groundtruth.txt \
   -o data/local/tum/freiburg3_long_office_household-groundtruth.txt
 
-conda run -n eecs545_env python experiments/task4-scale-audit/build_tum_scale_control.py \
+python -B experiments/task4-scale-audit/build_tum_scale_control.py \
   --ground-truth data/local/tum/freiburg3_long_office_household-groundtruth.txt \
   --out outputs/task4-scale-audit/tum-rerun
-conda run -n eecs545_env python scripts/eval_pi3x_tum_ate.py \
+python -B scripts/eval_pi3x_tum_ate.py \
   outputs/task4-scale-audit/tum-rerun/cameras.json \
   outputs/task4-scale-audit/tum-rerun/frames.json \
   data/local/tum/freiburg3_long_office_household-groundtruth.txt \
