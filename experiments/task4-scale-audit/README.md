@@ -14,25 +14,34 @@ checks the scale convention on held-out motion-capture camera centers.
 
 ## Runtime and inputs
 
-Run the commands from the repository root in Bash with a Python 3.11+
-environment named `eecs545_env`, with NumPy and Pillow available. The TUM
-checks need only Python and NumPy. Office48 additionally uses Blender 5.2.1
-and `jq` for creating placement JSON. The Mac run reused the archived model
-outputs and rendered with Cycles on CPU. It did not need CUDA, gated model
-weights or a Slurm job.
-
-Use a Blender application binary for the public whitebox smoke test. For the
-team chair, create a separate Python 3.13 environment with Blender's
-`bpy` wheel, as in the tested Mac setup.
+Run these commands from the repository root in Bash. The Task 4
+[`pyproject.toml`](pyproject.toml) defines an `analysis` group for TUM
+trajectory evaluation and Office48 mask scoring. Install it into
+`eecs545_env` with pip 25.1 or newer. If the Conda environment does not
+exist, create it with `conda create -n eecs545_env python=3.11 'pip>=25.1'`.
+If the existing environment has an older pip, update it with
+`conda install -n eecs545_env 'pip>=25.1'`.
 
 ```bash
-export BLENDER_BIN=/Applications/Blender.app/Contents/MacOS/Blender
+task4_config=./experiments/task4-scale-audit/pyproject.toml
+conda run -n eecs545_env python -m pip install --no-user --group "${task4_config}:analysis"
+```
+
+For the Office48 team-chair audit and rendering loop, install the `blender`
+group into a separate Python 3.13 virtual environment. This group includes
+the analysis dependencies and Blender's `bpy==5.2.1` wheel, available on
+Apple Silicon Macs. The placement commands also use the external `jq`
+executable. Set `BLENDER_BIN` for the optional public whitebox smoke test.
+The Mac reproduction used archived model outputs and Cycles on CPU.
+[Blender wheel compatibility](https://pypi.org/project/bpy/5.2.1/#files)
+
+```bash
 tools_dir="$PWD/outputs/task4-scale-audit/runtime"
 mkdir -p "$tools_dir"
 python3.13 -m venv "$tools_dir/blender-python"
 export BLENDER_PY="$tools_dir/blender-python/bin/python"
-"$BLENDER_PY" -m pip install 'bpy==5.2.1'
-conda run -n eecs545_env python -c 'import numpy, PIL'
+"$BLENDER_PY" -m pip install 'pip>=25.1'
+"$BLENDER_PY" -m pip install --group "${task4_config}:blender"
 ```
 
 Use distinct output directories or report filenames for each run. Store the

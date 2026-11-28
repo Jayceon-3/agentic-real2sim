@@ -1,0 +1,9 @@
+[dependency-groups]
+analysis = [
+    "numpy>=1.26,<3",
+    "Pillow>=10",
+]
+blender = [
+    { include-group = "analysis" },
+    "bpy==5.2.1",
+]
